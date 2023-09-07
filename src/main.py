@@ -1,13 +1,20 @@
 from hashlib import sha256
+from datetime import datetime, timedelta
 import requests
 import hmac
 import time
 import json
+import pytz
 
 #credentials
 APIURL = "https://open-api.bingx.com"
 APIKEY = "YOUR-API-KEY"
 SECRETKEY = "YOUR-SECRET-KEY"
+
+#current time
+timezone_summer = pytz.timezone('America/Cayman')
+current_time = datetime.now(timezone_summer)
+current_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 #get sign request secretkey to generate a signature
 def get_sign(api_secret, payload):
@@ -47,3 +54,21 @@ def get_balance(symbol):
             qty_balance =  round(float(balance["free"]),8)
             break
     return qty_balance
+
+#request withdraw
+def request_withdraw(coin, network, address, addressTag, amount):
+    payload = {}
+    path = '/openApi/wallets/v1/capital/withdraw/apply'
+    method = "POST"
+    paramsMap = {
+    "coin": coin,
+    "network": network,
+    "address": address,
+    "addressTag": addressTag,
+    "amount": amount,
+    "walletType": 1
+    }
+    paramsStr = praseParam(paramsMap)
+    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    result = json_data["data"]["id"]
+    return result
