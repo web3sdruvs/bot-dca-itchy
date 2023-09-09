@@ -92,3 +92,20 @@ def place_order(symbol, side, type, quantity):
     json_data = json.loads(send_request(method, path, paramsStr, payload))
     result = json_data["data"]["origClientOrderId"]
     return result
+
+
+#cancel an order
+def cancel_order(symbol, orderId):
+    payload = {}
+    path = '/openApi/spot/v1/trade/cancel'
+    method = "POST"
+    paramsMap = {
+    "symbol": symbol +"-USDT",
+    "orderId": orderId,
+    "recvWindow": 0
+    }
+    paramsStr = praseParam(paramsMap)
+    return send_request(method, path, paramsStr, payload)
+    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    result = json_data["data"]["clientOrderID"]
+    return result
