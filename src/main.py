@@ -72,3 +72,23 @@ def request_withdraw(coin, network, address, addressTag, amount):
     json_data = json.loads(send_request(method, path, paramsStr, payload))
     result = json_data["data"]["id"]
     return result
+
+#create an order
+def place_order(symbol, side, type, quantity):
+    payload = {}
+    path = '/openApi/spot/v1/trade/order'
+    method = "POST"
+    paramsMap = {
+    "symbol": symbol + "-USDT",
+    "side": side, #BUY/SELL
+    "type": type, #MARKET/LIMIT
+    "timeInForce": 0, #IOC = immediate-or-cancel , POC = process-or-cancel
+    "quantity": quantity,
+    "quoteOrderQty": 0,
+    "price": 1,
+    "recvWindow": 0
+    }
+    paramsStr = praseParam(paramsMap)
+    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    result = json_data["data"]["origClientOrderId"]
+    return result
