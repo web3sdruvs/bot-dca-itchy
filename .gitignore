@@ -17,6 +17,7 @@ tests/hosts/lcov/
 *.gcda
 *.o
 *.a
+*.ini
 
 #Ignore files built by Visual Studio/Visual Micro
 [Dd]ebug*/
