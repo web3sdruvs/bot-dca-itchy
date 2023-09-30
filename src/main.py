@@ -390,11 +390,11 @@ def get_statistic_token(symbol, url):
 #withdraw balance and check if there are usdt funds in the wallet
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
-    if usdt < 9:
+    if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,5,timestamp) 
+        buy_dca(symbol,5,usdt,timestamp) 
 
     time.sleep(0.100)
 
@@ -499,10 +499,11 @@ def indicators(symbol):
     return index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end
 
 #buy using dca by intensity
-def buy_dca(symbol, quantity, timestamp):
+def buy_dca(symbol, quantity, usdt,timestamp):
   index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
   quantity = quantity*total_end
   quantity = 5 if quantity < 5 else quantity
+  quantity = usdt if quantity > usdt else quantity
   orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
   return orderid, priceorder, qty, status
 
