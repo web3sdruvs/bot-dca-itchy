@@ -113,21 +113,21 @@ def send_request(method, path, urlpa, payload):
     return response.text
 
 #parameter encapsulation
-def praseParam(paramsMap):
-    sortedKeys = sorted(paramsMap)
-    paramsStr = '&'.join(['%s=%s' % (x, paramsMap[x]) for x in sortedKeys])
-    return paramsStr+'&timestamp='+str(int(time.time() * 1000))
+def praseParam(params_map):
+    sortedKeys = sorted(params_map)
+    params_str = '&'.join(['%s=%s' % (x, params_map[x]) for x in sortedKeys])
+    return params_str+'&timestamp='+str(int(time.time() * 1000))
 
 #get qty tokens balance
 def get_balance(symbol, timestamp):
     payload = {}
     path = '/openApi/spot/v1/account/balance'
     method = 'GET'
-    paramsMap = {
+    params_map = {
     'recvWindow': 0
     }
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:    
         for balance in json_data['data']['balances']:
@@ -147,7 +147,7 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     payload = {}
     path = '/openApi/wallets/v1/capital/withdraw/apply'
     method = 'POST'
-    paramsMap = {
+    params_map = {
     'coin': symbol,
     'network': network,
     'address': address,
@@ -155,8 +155,8 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     'amount': amount,
     'walletType': 1
     }
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:  
         result = json_data['data']['id']
@@ -177,11 +177,11 @@ def get_withdrawfee(symbol, network,timestamp):
     payload = {}
     path = '/openApi/wallets/v1/capital/config/getall'
     method = "GET"
-    paramsMap = {
+    params_map = {
     "recvWindow": 0
     }
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:  
       json_data = json_data['data']
@@ -203,7 +203,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     payload = {}
     path = '/openApi/spot/v1/trade/order'
     method = 'POST'
-    paramsMap = {
+    params_map = {
     'symbol': symbol+'-USDT',
     'side': 'BUY', #BUY/SELL
     'type': 'MARKET', #MARKET/LIMIT
@@ -211,8 +211,8 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'quoteOrderQty': quantity,
     'recvWindow': 0
     }
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:
         orderId = json_data['data']['orderId']
@@ -273,17 +273,17 @@ def cancel_order(symbol, orderId, timestamp):
     payload = {}
     path = '/openApi/spot/v1/trade/cancel'
     method = 'POST'
-    paramsMap = {
+    params_map = {
     'symbol': symbol +'-USDT',
     'orderId': orderId,
     'recvWindow': 0
     }
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
     
     if 'data' in json_data:
-        clientOrderID = json_data['data']['clientOrderID']
-        return clientOrderID
+        client_order_id = json_data['data']['client_order_id']
+        return client_order_id
     else: 
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
@@ -296,11 +296,11 @@ def get_price(symbol, timestamp):
     payload = {}
     path = '/openApi/spot/v1/ticker/24hr'
     method = 'GET'
-    paramsMap = {
+    params_map = {
     'symbol': symbol +'-USDT'
     }
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data: 
         low = round(json_data['data'][0]['lowPrice'],4)
@@ -324,15 +324,15 @@ def get_rsi(symbol, timestamp):
     payload = {}
     path = '/openApi/spot/v1/market/kline'
     method = 'GET'
-    paramsMap = {
+    params_map = {
     'symbol': symbol +'-USDT',
     'interval': '1d',
     'startTime': start_epoch_timestamp,
     'endTime': end_epoch_timestamp,
     'limit' : 14
     }  
-    paramsStr = praseParam(paramsMap)
-    json_data = json.loads(send_request(method, path, paramsStr, payload))
+    params_str = praseParam(params_map)
+    json_data = json.loads(send_request(method, path, params_str, payload))
     
     if 'data' in json_data:
       opening = []
