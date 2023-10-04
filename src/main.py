@@ -437,7 +437,6 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
     else:
         time.sleep(0.100)
 
-
 def indicators(symbol):
     index_current, index_yesterday, index_last_week, index_last_month = get_index_fear_greed(get_index_feargreed)
     total_global, volume_global, dominance_btc_global = get_statistic_global(statistic_global)
