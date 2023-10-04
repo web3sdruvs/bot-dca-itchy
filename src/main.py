@@ -90,7 +90,7 @@ def handler():
         qty_token = get_balance(token_symbol[i], current_time)
         price_low, price_current, price_last = get_price(token_symbol[i], current_time)
         if qty_token is not None:
-            token_amount_balance = check_balance_withdraw(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
+            check_balance_withdraw(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
         else: 
             bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
@@ -354,7 +354,7 @@ def get_rsi(symbol, timestamp):
       for i in range(period, len(daily_change)):
           gain = positive_change[i]
           loss = negative_change[i]
-          
+
           moving_average_gains.append(((period - 1) * moving_average_gains[-1] + gain) / period)
           moving_average_losses.append(((period - 1) * moving_average_losses[-1] + loss) / period)
 
