@@ -167,7 +167,34 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: praseParam\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+error)
+
+#fee withdraw
+def get_withdrawfee(symbol, network,timestamp):
+    network = network.upper()
+    payload = {}
+    path = '/openApi/wallets/v1/capital/config/getall'
+    method = "GET"
+    paramsMap = {
+    "recvWindow": 0
+    }
+    paramsStr = praseParam(paramsMap)
+    json_data = json.loads(send_request(method, path, paramsStr, payload))
+
+    if 'data' in json_data:  
+      json_data = json_data['data']
+      for i in json_data:
+        network_list = i.get("networkList", [])
+        for fee  in network_list:
+          if fee.get("name") == symbol and fee.get("network") == network:
+            network_fee = float(fee['withdrawFee'])
+      return network_fee
+    else: 
+        error = json_data['msg']
+        error = re.sub(re_default, ' ', str(error))
+        bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
+                +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_withdrawfee\n\nError: '+error)
+        return error
 
 #create an order
 def place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity):
@@ -397,8 +424,9 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
         buy_dca(symbol,5,usdt,timestamp) 
 
     time.sleep(0.100)
-
-    if balance > 6:
+    fee = get_withdrawfee(symbol,network,timestamp)
+ 
+    if (fee/amount)<0.05:
         request_withdraw(symbol, network, address, tag, amount, timestamp)
     else:
         time.sleep(0.100)
@@ -486,7 +514,7 @@ def indicators(symbol):
         rsi_w = 0.6
     elif rsi_value > 30 and rsi_value < 50: 
         rsi_w = 0.8
-    elif rsi_value < 30: 
+    elif rsi_value <= 30: 
         rsi_w = 1
     else:
         rsi_w = 0
