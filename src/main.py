@@ -140,6 +140,7 @@ def get_balance(symbol, timestamp):
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_balance\n\nError: '+error)
+        return error
 
 #request withdraw
 def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
@@ -168,7 +169,8 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+error)
-
+        return error
+    
 #fee withdraw
 def get_withdrawfee(symbol, network,timestamp):
     network = network.upper()
@@ -264,6 +266,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: place\\_order\n\nError: '+error)
+        return error
 
 #cancel an order
 def cancel_order(symbol, orderId, timestamp):
@@ -286,6 +289,7 @@ def cancel_order(symbol, orderId, timestamp):
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: cancel\\_order\n\nError: '+error)
+        return error
 
 #get prices current, open and low
 def get_price(symbol, timestamp):
@@ -308,6 +312,7 @@ def get_price(symbol, timestamp):
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+error)
+        return error
 
 #get relative strength index 
 def get_rsi(symbol, timestamp):
@@ -362,6 +367,7 @@ def get_rsi(symbol, timestamp):
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_rsi\n\nError: '+error)
+        return error
 
 #send msg to telegram
 def bot_telegram(msg_text):
