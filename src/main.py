@@ -227,7 +227,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
                      +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\nAmount: '
                      +str(qty).replace('.', '\\.')+'\nTotal: \\$'+str(total).replace('.', '\\.')+'\n\n📈Volatility in the Market\n\nIndex: '
                      +str(index_current).replace('.', '\\.')+' \\('+index_class+'\\)'
-                     +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.')
+                     +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.').replace('-', '\\-')
                      +'\nRSI: '+str(round(rsi_value,2)).replace('.', '\\.')+'%'
                      +'\nBTC Dominance: '+str(round(dominance_btc_global,2)).replace('.', '\\.')+'%'
                      +'\n1H Units: '+str(round(percent_1h_token,2)).replace('.', '\\.').replace('-', '\\-')+'%\n24H Units: '
