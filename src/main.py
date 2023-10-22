@@ -86,8 +86,7 @@ re_default = r'[^a-zA-Z0-9\s]'
 
 #handler function is a function that deals with specific events or requests in a program
 def handler():
-    #for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
-    for i in range(1):
+    for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
         qty_token = get_balance(token_symbol[i], current_time)
         price_low, price_current, price_last = get_price(token_symbol[i], current_time)
         if qty_token is not None:
