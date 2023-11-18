@@ -413,7 +413,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,5,usdt,timestamp) 
+        buy_dca(symbol,1,usdt,timestamp) 
 
     time.sleep(0.100)
 
