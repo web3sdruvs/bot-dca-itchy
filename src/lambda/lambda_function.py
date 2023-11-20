@@ -351,7 +351,7 @@ def get_rsi(symbol, timestamp):
     else:
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
-        bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
+        bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_rsi\n\nError: '+error)
         return error
 
@@ -409,24 +409,26 @@ def get_statistic_token(symbol, url):
 #withdraw balance and check if there are usdt funds in the wallet
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
+    
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,1,usdt,timestamp) 
+        buy_dca(symbol,5,usdt,timestamp) 
 
     time.sleep(0.100)
 
-    #disable withdraw
-    '''
     fee = get_withdrawfee(symbol,network,timestamp)
  
     if (fee/amount)<0.05:
-        request_withdraw(symbol, network, address, tag, amount, timestamp)
+        bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol+' balance is\nAmount: $'
+                    +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
+                    +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
+                    +str(round(fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
+                    +str(round((fee/amount)*100,2)).replace('.', '\\.')+'%')
     else:
         time.sleep(0.100)
-    '''   
-
+    
 def indicators(symbol):
     index_current, index_yesterday, index_last_week, index_last_month = get_index_fear_greed(get_index_feargreed)
     total_global, volume_global, dominance_btc_global = get_statistic_global(statistic_global)
