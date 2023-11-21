@@ -420,7 +420,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
 
     fee = get_withdrawfee(symbol,network,timestamp)
  
-    if (fee/amount)<0.05:
+    if (fee/amount)<0.05 and amount > 50:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
