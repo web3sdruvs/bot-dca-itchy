@@ -158,7 +158,8 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
         return error
     
 #fee withdraw
-def get_withdrawfee(symbol, network,timestamp):
+def get_withdrawfee(symbol,network,timestamp):
+    network_fee = float(0.0)
     network = network.upper()
     payload = {}
     path = '/openApi/wallets/v1/capital/config/getall'
@@ -168,7 +169,7 @@ def get_withdrawfee(symbol, network,timestamp):
     }
     params_str = praseParam(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
-
+    
     if 'data' in json_data:  
       json_data = json_data['data']
       for i in json_data:
@@ -176,7 +177,7 @@ def get_withdrawfee(symbol, network,timestamp):
         for fee  in network_list:
           if fee.get("name") == symbol and fee.get("network") == network:
             network_fee = float(fee['withdrawFee'])
-      return network_fee
+            return network_fee
     else: 
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
@@ -415,11 +416,11 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
         buy_dca(symbol,5,usdt,timestamp) 
-
+    
     time.sleep(0.100)
 
     fee = get_withdrawfee(symbol,network,timestamp)
- 
+
     if (fee/amount)<0.05 and amount >= 30:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
@@ -534,8 +535,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
 
 #handler function is a function that deals with specific events or requests in a program
 def lambda_handler(event, context):
-    #for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
-    for i in range(1):
+    for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
         qty_token = get_balance(token_symbol[i], current_time)
         price_low, price_current, price_last = get_price(token_symbol[i], current_time)
         if qty_token is not None:
