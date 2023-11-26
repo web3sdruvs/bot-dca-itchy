@@ -173,6 +173,7 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     
 #fee withdraw
 def get_withdrawfee(symbol, network,timestamp):
+    network_fee = float(0.0)
     network = network.upper()
     payload = {}
     path = '/openApi/wallets/v1/capital/config/getall'
@@ -190,7 +191,7 @@ def get_withdrawfee(symbol, network,timestamp):
         for fee  in network_list:
           if fee.get("name") == symbol and fee.get("network") == network:
             network_fee = float(fee['withdrawFee'])
-      return network_fee
+            return network_fee
     else: 
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
