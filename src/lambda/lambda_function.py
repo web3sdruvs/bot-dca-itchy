@@ -199,6 +199,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'recvWindow': 0
     }
     params_str = praseParam(params_map)
+    time.sleep(0.100)
     json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:
@@ -411,13 +412,15 @@ def get_statistic_token(symbol, url):
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
     
+    time.sleep(0.100)
+
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
         buy_dca(symbol,10,usdt,timestamp) 
     
-    time.sleep(0.100)
+    time.sleep(0.500)
 
     fee = get_withdrawfee(symbol,network,timestamp)
 
