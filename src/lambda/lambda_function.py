@@ -194,7 +194,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'symbol': symbol+'-USDT',
     'side': 'BUY', #BUY/SELL
     'type': 'MARKET', #MARKET/LIMIT
-    'timeInForce': 'IOC', #IOC = immediate-or-cancel , POC = process-or-cancel
+    'timeInForce': 'POC', #IOC = immediate-or-cancel , POC = process-or-cancel
     'quoteOrderQty': quantity,
     'recvWindow': 0
     }
