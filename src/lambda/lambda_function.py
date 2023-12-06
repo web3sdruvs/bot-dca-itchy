@@ -187,6 +187,7 @@ def get_withdrawfee(symbol,network,timestamp):
 
 #create an order
 def place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity):
+    print(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity)
     payload = {}
     path = '/openApi/spot/v1/trade/order'
     method = 'POST'
@@ -199,9 +200,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'recvWindow': 0
     }
     params_str = praseParam(params_map)
-    time.sleep(0.100)
     json_data = json.loads(send_request(method, path, params_str, payload))
-
     if 'data' in json_data:
         orderId = json_data['data']['orderId']
         priceOrder = round(float(json_data['data']['price']),3)
@@ -214,7 +213,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
                      +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\nAmount: '
                      +str(qty).replace('.', '\\.')+'\nTotal: \\$'+str(total).replace('.', '\\.')+'\n\n📈Volatility in the Market\n\nIndex: '
                      +str(index_current).replace('.', '\\.')+' \\('+index_class+'\\)'
-                     +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.')
+                     +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.').replace('-', '\\-')
                      +'\nRSI: '+str(round(rsi_value,2)).replace('.', '\\.')+'%'
                      +'\nBTC Dominance: '+str(round(dominance_btc_global,2)).replace('.', '\\.')+'%'
                      +'\n1H Units: '+str(round(percent_1h_token,2)).replace('.', '\\.').replace('-', '\\-')+'%\n24H Units: '
@@ -224,6 +223,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         #register order in csv
         bucket_name = BUCKET_BOT_DCA_ITCHY
         token_lower = symbol.lower()
+        token_lower = token_lower if 'wbtc' != symbol else 'btc'
         file_name = 'token/'+token_lower+'.csv'
         s3 = boto3.client('s3')
 
@@ -423,9 +423,14 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
     time.sleep(0.500)
 
     fee = get_withdrawfee(symbol,network,timestamp)
-
-    if (fee/amount)<0.05 and amount >= 30:
-        bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol+' balance is\nAmount: $'
+    
+    try:
+        fee_percentage = fee/amount
+    except:
+        fee_percentage = 1
+    
+    if fee_percentage<0.05 and amount >= 20:
+        bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
                     +str(round(fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
