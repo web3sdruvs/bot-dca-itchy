@@ -187,7 +187,6 @@ def get_withdrawfee(symbol,network,timestamp):
 
 #create an order
 def place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity):
-    print(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity)
     payload = {}
     path = '/openApi/spot/v1/trade/order'
     method = 'POST'
