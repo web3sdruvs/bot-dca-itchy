@@ -18,6 +18,7 @@ tests/hosts/lcov/
 *.o
 *.a
 *.ini
+*.pbix
 
 #Ignore files built by Visual Studio/Visual Micro
 [Dd]ebug*/
