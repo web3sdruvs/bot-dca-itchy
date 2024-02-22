@@ -423,7 +423,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
     
     time.sleep(0.100)
     
-    value=5 if symbol != 'BTC' else 5
+    value = 5 if symbol != 'BTC' else 5
 
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
@@ -440,7 +440,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
     except:
         fee_percentage = 1
     
-    if fee_percentage<0.05 and amount >= 20:
+    if fee_percentage < 0.05 and amount >= 20:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '

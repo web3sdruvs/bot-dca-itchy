@@ -172,7 +172,7 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
         return error
     
 #fee withdraw
-def get_withdrawfee(symbol, network,timestamp):
+def get_withdrawfee(symbol,network,timestamp):
     network_fee = float(0.0)
     network = network.upper()
     payload = {}
@@ -183,7 +183,7 @@ def get_withdrawfee(symbol, network,timestamp):
     }
     params_str = praseParam(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
-
+    
     if 'data' in json_data:  
       json_data = json_data['data']
       for i in json_data:
@@ -214,7 +214,6 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     }
     params_str = praseParam(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
-
     if 'data' in json_data:
         orderId = json_data['data']['orderId']
         priceOrder = round(float(json_data['data']['price']),3)
@@ -237,6 +236,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         #register order in csv
         bucket_name = BUCKET_BOT_DCA_ITCHY
         token_lower = symbol.lower()
+        token_lower = token_lower if 'wbtc' != symbol else 'btc'
         file_name = 'token/'+token_lower+'.csv'
         s3 = boto3.client('s3')
 
@@ -366,7 +366,7 @@ def get_rsi(symbol, timestamp):
     else:
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
-        bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
+        bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_rsi\n\nError: '+error)
         return error
 
@@ -413,31 +413,56 @@ def get_statistic_token(symbol, url):
     for i in statistic_token:
         i['id'] = i['symbol']
     
-    statistic_token = [i for i in statistic_token if i['id'] == symbol]
-    volume = float(statistic_token[0]['24h_volume_usd'])
-    marketcap = float(statistic_token[0]['market_cap_usd'])
-    percent_1h = float(statistic_token[0]['percent_change_1h'])
-    percent_24h = float(statistic_token[0]['percent_change_24h'])
-    percent_7d = float(statistic_token[0]['percent_change_7d'])
-    return volume, marketcap, percent_1h, percent_24h, percent_7d
+    try:
+        statistic_token = [i for i in statistic_token if i['id'] == symbol]
+        volume = float(statistic_token[0]['24h_volume_usd'])
+        marketcap = float(statistic_token[0]['market_cap_usd'])
+        percent_1h = float(statistic_token[0]['percent_change_1h'])
+        percent_24h = float(statistic_token[0]['percent_change_24h'])
+        percent_7d = float(statistic_token[0]['percent_change_7d'])
+        return volume, marketcap, percent_1h, percent_24h, percent_7d
+        
+    except:
+        volume = 1
+        marketcap = 1
+        percent_1h = 1
+        percent_24h = 1
+        percent_7d = 1
+        return volume, marketcap, percent_1h, percent_24h, percent_7d
+        
 
 #withdraw balance and check if there are usdt funds in the wallet
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
+    
+    time.sleep(0.100)
+    
+    value = 5 if symbol != 'BTC' else 5
+
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,5,usdt,timestamp) 
+        buy_dca(symbol,value,usdt,timestamp) 
+    
+    time.sleep(0.500)
 
-    time.sleep(0.100)
     fee = get_withdrawfee(symbol,network,timestamp)
- 
-    if (fee/amount)<0.05:
-        request_withdraw(symbol, network, address, tag, amount, timestamp)
+    
+    try:
+        fee_percentage = fee/amount
+    except:
+        fee_percentage = 1
+    
+    if fee_percentage < 0.05 and amount >= 20:
+        bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
+                    +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
+                    +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
+                    +str(round(fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
+                    +str(round((fee/amount)*100,2)).replace('.', '\\.')+'%')
     else:
         time.sleep(0.100)
-
+    
 def indicators(symbol):
     index_current, index_yesterday, index_last_week, index_last_month = get_index_fear_greed(get_index_feargreed)
     total_global, volume_global, dominance_btc_global = get_statistic_global(statistic_global)
