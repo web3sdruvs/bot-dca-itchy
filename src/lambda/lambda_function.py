@@ -399,25 +399,37 @@ def get_statistic_token(symbol, url):
     for i in statistic_token:
         i['id'] = i['symbol']
     
-    statistic_token = [i for i in statistic_token if i['id'] == symbol]
-    volume = float(statistic_token[0]['24h_volume_usd'])
-    marketcap = float(statistic_token[0]['market_cap_usd'])
-    percent_1h = float(statistic_token[0]['percent_change_1h'])
-    percent_24h = float(statistic_token[0]['percent_change_24h'])
-    percent_7d = float(statistic_token[0]['percent_change_7d'])
-    return volume, marketcap, percent_1h, percent_24h, percent_7d
+    try:
+        statistic_token = [i for i in statistic_token if i['id'] == symbol]
+        volume = float(statistic_token[0]['24h_volume_usd'])
+        marketcap = float(statistic_token[0]['market_cap_usd'])
+        percent_1h = float(statistic_token[0]['percent_change_1h'])
+        percent_24h = float(statistic_token[0]['percent_change_24h'])
+        percent_7d = float(statistic_token[0]['percent_change_7d'])
+        return volume, marketcap, percent_1h, percent_24h, percent_7d
+        
+    except:
+        volume = 1
+        marketcap = 1
+        percent_1h = 1
+        percent_24h = 1
+        percent_7d = 1
+        return volume, marketcap, percent_1h, percent_24h, percent_7d
+        
 
 #withdraw balance and check if there are usdt funds in the wallet
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
     
     time.sleep(0.100)
+    
+    value=5 if symbol != 'BTC' else 5
 
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,10,usdt,timestamp) 
+        buy_dca(symbol,value,usdt,timestamp) 
     
     time.sleep(0.500)
 
