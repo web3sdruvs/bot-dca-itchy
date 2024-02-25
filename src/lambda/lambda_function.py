@@ -404,8 +404,18 @@ def get_price(symbol, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+error)
         return error
 
-#get relative strength index 
 def get_rsi(symbol, timestamp):
+    """
+    Calculate the Relative Strength Index (RSI) for a given cryptocurrency symbol over a 14-day period.
+
+    Parameters:
+    - symbol (str): The cryptocurrency symbol (e.g., 'BTC', 'ETH').
+    - timestamp (str): Timestamp used for error logging and notification.
+
+    Returns:
+    - float: If successful, returns the calculated RSI value.
+    - str: If an error occurs, returns the error message.
+    """
     current_datetime = datetime.now()
     resultant_date = current_datetime - timedelta(days=14)
     desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
