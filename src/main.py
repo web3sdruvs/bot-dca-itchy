@@ -418,11 +418,7 @@ def get_statistic_token(symbol, url):
         percent_7d = float(statistic_token[0]['percent_change_7d'])
         return volume, marketcap, percent_1h, percent_24h, percent_7d    
     except:
-        volume = 1e-7
-        marketcap = 1e-7
-        percent_1h = 1e-7
-        percent_24h = 1e-7
-        percent_7d = 1e-7
+        volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
         return volume, marketcap, percent_1h, percent_24h, percent_7d
         
 
