@@ -371,8 +371,18 @@ def cancel_order(symbol, orderId, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: cancel\\_order\n\nError: '+error)
         return error
 
-#get prices current, open and low
 def get_price(symbol, timestamp):
+    """
+    Retrieve current price information for a given cryptocurrency symbol.
+
+    Parameters:
+    - symbol (str): The symbol of the cryptocurrency (e.g. 'BTC', 'ETH').
+    - timestamp (str): Timestamp used for recording and error notification.
+
+    Returns:
+    - tuple: If successful, returns a tuple containing the 24-hour minimum price, current price, and price changes.
+    - str: If an error occurs, returns the error message.
+    """
     payload = {}
     path = '/openApi/spot/v1/ticker/24hr'
     method = 'GET'
