@@ -248,8 +248,27 @@ def get_withdrawfee(symbol,network,timestamp):
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_withdrawfee\n\nError: '+error)
         return error
 
-#create an order
 def place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity):
+    """
+    Place a market buy order for a specified cryptocurrency symbol.
+
+    Parameters:
+    - symbol (str): The cryptocurrency symbol (e.g., 'BTC', 'ETH').
+    - quantity (float): The quantity of the cryptocurrency to buy.
+    - timestamp (str): Timestamp used for logging and notification.
+    - index_current (float): Number Fear and Greed Index.
+    - index_class (str): Classification Fear and Greed Index.
+    - dominance_btc_global (float): BTC dominance in the global market.
+    - percent_1h_token (float): 1-hour price change percentage for the token.
+    - percent_24h_token (float): 24-hour price change percentage for the token.
+    - percent_7d_token (float): 7-day price change percentage for the token.
+    - rsi_value (float): RSI (Relative Strength Index) value.
+    - intensity (float): Buy hand intensity value.
+
+    Returns:
+    - dict: If successful, returns a dictionary containing order details and market information.
+    - dict: If an error occurs, returns a dictionary with the 'statusCode' key set to 500.
+    """
     payload = {}
     path = '/openApi/spot/v1/trade/order'
     method = 'POST'
