@@ -84,8 +84,17 @@ address_destination = config.get_token_address()
 current_time = config.get_current_time()
 re_default = r'[^a-zA-Z0-9\s]'
 
-#get sign request secretkey to generate a signature
 def get_sign(api_secret, payload):
+    """
+    Generate a signature for authenticating an API request.
+
+    Parameters:
+    - api_secret (str): API secret key.
+    - payload (str): Request data to be signed.
+
+    Returns:
+    - str: Generated signature as a hexadecimal string.
+    """
     signature = hmac.new(api_secret.encode('utf-8'), payload.encode('utf-8'), digestmod=sha256).hexdigest()
     return signature
 
