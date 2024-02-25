@@ -118,8 +118,16 @@ def send_request(method, path, urlpa, payload):
     response = requests.request(method, url, headers=headers, data=payload)
     return response.text
 
-#parameter encapsulation
 def praseParam(params_map):
+    """
+    Encapsulate parameters in a specific format for an API request.
+
+    Parameters:
+    - params_map (dict): Dictionary containing the request parameters.
+
+    Returns:
+    - str: Formatted string of parameters with timestamp added.
+    """
     sortedKeys = sorted(params_map)
     params_str = '&'.join(['%s=%s' % (x, params_map[x]) for x in sortedKeys])
     return params_str+'&timestamp='+str(int(time.time() * 1000))
