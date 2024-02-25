@@ -556,7 +556,22 @@ def get_statistic_token(symbol, url):
         return volume, marketcap, percent_1h, percent_24h, percent_7d
         
 #withdraw balance and check if there are usdt funds in the wallet
-def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
+def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp): 
+    """
+    Withdraw balance and check if there are USDT funds in the wallet.
+
+    Parameters:
+    - balance (float): The balance of the specified token.
+    - amount (float): The amount to withdraw.
+    - symbol (str): The symbol of the token (e.g., 'BTC', 'ETH').
+    - network (str): The network for withdrawal (e.g., 'ETH', 'TRX').
+    - address (str): The withdrawal address.
+    - tag (str): The withdrawal tag.
+    - timestamp (str): Timestamp used for error logging and notification.
+
+    Returns:
+    - None
+    """ 
     usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
     value = 5
