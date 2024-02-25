@@ -166,8 +166,22 @@ def get_balance(symbol, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_balance\n\nError: '+error)
         return error
 
-#request withdraw
 def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
+    """
+    Initiate a withdrawal request for a specific cryptocurrency.
+
+    Parameters:
+    - symbol (str): The cryptocurrency symbol (e.g., 'BTC', 'ETH').
+    - network (str): The network for the withdrawal (e.g., 'BTC', 'ERC20').
+    - address (str): The destination address for the withdrawal.
+    - addressTag (str): Address tag or memo for certain cryptocurrencies.
+    - amount (float): The amount of cryptocurrency to withdraw.
+    - timestamp (str): Timestamp used for error logging.
+
+    Returns:
+    - int: If successful, returns the withdrawal request ID.
+    - str: If an error occurs, returns the error message.
+    """
     payload = {}
     path = '/openApi/wallets/v1/capital/withdraw/apply'
     method = 'POST'
