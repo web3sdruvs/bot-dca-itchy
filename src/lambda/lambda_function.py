@@ -718,8 +718,17 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
     return orderid, priceorder, qty, status
 
-#handler function is a function that deals with specific events or requests in a program
 def lambda_handler(event, context):
+    """
+    Create a handler function that can be used as handler in AWS Lambda console.
+
+    Parameters:
+    - event (dict): AWS Lambda event data.
+    - context (LambdaContext): AWS Lambda context data.
+
+    Returns:
+    - dict: A dictionary containing a simple status code.        
+    """
     for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
         qty_token = get_balance(token_symbol[i], current_time)
         price_low, price_current, price_last = get_price(token_symbol[i], current_time)
