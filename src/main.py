@@ -140,7 +140,7 @@ def send_request(method, path, urlpa, payload):
     response = requests.request(method, url, headers=headers, data=payload)
     return response.text
 
-def praseParam(params_map):
+def prase_param(params_map):
     """
     Encapsulate parameters in a specific format for an API request.
 
@@ -172,7 +172,7 @@ def get_balance(symbol, timestamp):
     params_map = {
     'recvWindow': 0
     }
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:    
@@ -215,7 +215,7 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     'amount': amount,
     'walletType': 1
     }
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data:  
@@ -252,7 +252,7 @@ def get_withdrawfee(symbol,network,timestamp):
     params_map = {
     "recvWindow": 0
     }
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
     
     if 'data' in json_data:  
@@ -302,7 +302,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'quoteOrderQty': quantity,
     'recvWindow': 0
     }
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
     if 'data' in json_data:
         orderId = json_data['data']['orderId']
@@ -380,7 +380,7 @@ def cancel_order(symbol, orderId, timestamp):
     'orderId': orderId,
     'recvWindow': 0
     }
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
     
     if 'data' in json_data:
@@ -411,7 +411,7 @@ def get_price(symbol, timestamp):
     params_map = {
     'symbol': symbol +'-USDT'
     }
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
 
     if 'data' in json_data: 
@@ -453,7 +453,7 @@ def get_rsi(symbol, timestamp):
     'endTime': end_epoch_timestamp,
     'limit' : 14
     }  
-    params_str = praseParam(params_map)
+    params_str = prase_param(params_map)
     json_data = json.loads(send_request(method, path, params_str, payload))
     
     if 'data' in json_data:
