@@ -341,10 +341,8 @@ def get_rsi(symbol, timestamp):
       for i in range(period, len(daily_change)):
           gain = positive_change[i]
           loss = negative_change[i]
-
           moving_average_gains.append(((period - 1) * moving_average_gains[-1] + gain) / period)
           moving_average_losses.append(((period - 1) * moving_average_losses[-1] + loss) / period)
-
       rs = [moving_average_gains[i] / moving_average_losses[i] for i in range(len(moving_average_gains))]
       rsi = [100 - (100 / (1 + rs_value)) for rs_value in rs]
       rsi = rsi[0]
@@ -394,11 +392,9 @@ def get_statistic_global(url):
 #coin and token prices updated
 def get_statistic_token(symbol, url):
     statistic_token = requests.get(url)
-    statistic_token =  statistic_token.json()
-    
+    statistic_token =  statistic_token.json() 
     for i in statistic_token:
-        i['id'] = i['symbol']
-    
+        i['id'] = i['symbol']   
     try:
         statistic_token = [i for i in statistic_token if i['id'] == symbol]
         volume = float(statistic_token[0]['24h_volume_usd'])
@@ -408,11 +404,11 @@ def get_statistic_token(symbol, url):
         percent_7d = float(statistic_token[0]['percent_change_7d'])
         return volume, marketcap, percent_1h, percent_24h, percent_7d    
     except:
-        volume = 1
-        marketcap = 1
-        percent_1h = 1
-        percent_24h = 1
-        percent_7d = 1
+        volume = 1e-7
+        marketcap = 1e-7
+        percent_1h = 1e-7
+        percent_24h = 1e-7
+        percent_7d = 1e-7
         return volume, marketcap, percent_1h, percent_24h, percent_7d
         
 
@@ -429,7 +425,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
     time.sleep(0.100)
     fee = get_withdrawfee(symbol,network,timestamp)   
     try:
-        fee_percentage = fee/amount
+        fee_percentage = fee / amount
     except:
         fee_percentage = 1
     if fee_percentage < 0.05 and amount >= 10:
@@ -437,7 +433,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
                     +str(round(fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
-                    +str(round((fee/amount)*100,2)).replace('.', '\\.')+'%')
+                    +str(round((fee / amount) * 100,2)).replace('.', '\\.')+'%')
     else:
         time.sleep(0.100)
     
