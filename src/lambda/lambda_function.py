@@ -209,8 +209,19 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+error)
         return error
     
-#fee withdraw
 def get_withdrawfee(symbol,network,timestamp):
+    """
+    Retrieve the withdrawal fee for a specific cryptocurrency and network.
+
+    Parameters:
+    - symbol (str): The cryptocurrency symbol (e.g., 'BTC', 'ETH').
+    - network (str): The network for the withdrawal (e.g., 'BTC', 'ERC20').
+    - timestamp (str): Timestamp used for error logging.
+
+    Returns:
+    - float: The withdrawal fee for the specified cryptocurrency and network.
+    - str: If an error occurs, returns the error message.
+    """
     network_fee = float(0.0)
     network = network.upper()
     payload = {}
