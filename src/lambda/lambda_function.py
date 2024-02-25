@@ -467,9 +467,17 @@ def get_rsi(symbol, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_rsi\n\nError: '+error)
         return error
 
-#send msg to telegram
 def bot_telegram(msg_text):
-  BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
+    """
+    Send a message to a specified Telegram chat using the provided message text.
+
+    Parameters:
+    - msg_text (str): The text of the message to be sent.
+
+    Returns:
+    - None
+    """
+    BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
 
 #get the latest data of the fear and greed Index 
 #index <= 25 : Extreme Fear | index <= 46 : Fear | index >=47 : Neutral | index >= 55 : Greed | index >= 76 : Extreme Greed
