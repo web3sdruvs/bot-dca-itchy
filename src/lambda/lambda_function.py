@@ -529,6 +529,16 @@ def get_statistic_global(url):
 
 #coin and token prices updated
 def get_statistic_token(symbol, url):
+    """
+    Get specific token statistics from a given URL based on the provided symbol.
+
+    Parameters:
+    - symbol (str): The symbol of the token (e.g., 'BTC', 'ETH').
+    - url (str): The URL to retrieve token statistics.
+
+    Returns:
+    - tuple: A tuple containing the 24-hour trading volume, market cap, and percentage changes in 1h, 24h, and 7d.
+    """
     statistic_token = requests.get(url)
     statistic_token =  statistic_token.json() 
     for i in statistic_token:
