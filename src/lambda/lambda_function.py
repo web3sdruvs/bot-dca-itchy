@@ -337,8 +337,19 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: place\\_order\n\nError: '+error)
         return error
 
-#cancel an order
 def cancel_order(symbol, orderId, timestamp):
+    """
+    Cancel a specific order for a given cryptocurrency symbol.
+
+    Parameters:
+    - symbol (str): The cryptocurrency symbol (e.g., 'BTC', 'ETH').
+    - orderId (int): The ID of the order to be canceled.
+    - timestamp (str): Timestamp used for error logging and notification.
+
+    Returns:
+    - int: If successful, returns the client order ID of the canceled order.
+    - str: If an error occurs, returns the error message.
+    """
     payload = {}
     path = '/openApi/spot/v1/trade/cancel'
     method = 'POST'
