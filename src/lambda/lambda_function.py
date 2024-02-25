@@ -596,6 +596,15 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
         time.sleep(0.100)
     
 def indicators(symbol):
+    """
+    Calculate a set of indicators for a given cryptocurrency token.
+
+    Parameters:
+    - symbol (str): The symbol of the token (e.g., 'BTC', 'ETH').
+
+    Returns:
+    - tuple: A tuple containing the calculated indicators for the token.
+    """
     index_current, index_yesterday, index_last_week, index_last_month = get_index_fear_greed(get_index_feargreed)
     total_global, volume_global, dominance_btc_global = get_statistic_global(statistic_global)
     volume_24h_token, total_marketcap_token, percent_1h_token, percent_24h_token, percent_7d_token = get_statistic_token(symbol if 'WBTC' != symbol else 'BTC', statistic_token)
@@ -689,14 +698,25 @@ def indicators(symbol):
 
     return index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end
 
-#buy using dca by intensity
 def buy_dca(symbol, quantity, usdt,timestamp):
-  index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
-  quantity = quantity*total_end
-  quantity = 5 if quantity < 5 else quantity
-  quantity = usdt if quantity > usdt else quantity
-  orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
-  return orderid, priceorder, qty, status
+    """
+    Buy using Dollar-Cost Averaging (DCA) strategy by intensity.
+
+    Parameters:
+    - symbol (str): The symbol of the token (e.g., 'BTC', 'ETH').
+    - quantity (float): The initial quantity to buy based on intensity.
+    - usdt (float): The available USDT balance for the purchase.
+    - timestamp (str): Timestamp used for order placement and logging.
+
+    Returns:
+    - tuple: A tuple containing the order ID, price, quantity, and status of the DCA purchase.
+    """
+    index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
+    quantity = quantity*total_end
+    quantity = 5 if quantity < 5 else quantity
+    quantity = usdt if quantity > usdt else quantity
+    orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
+    return orderid, priceorder, qty, status
 
 #handler function is a function that deals with specific events or requests in a program
 def lambda_handler(event, context):
