@@ -511,6 +511,15 @@ def get_index_fear_greed(url):
 
 #get global market information at a glance
 def get_statistic_global(url):
+    """
+    Get crypto market insights.
+
+    Parameters:
+    - url (str): The URL to retrieve global market information.
+
+    Returns:
+    - tuple: a tuple containing the total market value, 24-hour trading volume and Bitcoin dominance.
+    """
     statistic_global = requests.get(url)
     statistic_global = statistic_global.json()
     total = statistic_global['total_market_cap_usd']
