@@ -421,7 +421,6 @@ def get_statistic_token(symbol, url):
         volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
         return volume, marketcap, percent_1h, percent_24h, percent_7d
         
-
 #withdraw balance and check if there are usdt funds in the wallet
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
