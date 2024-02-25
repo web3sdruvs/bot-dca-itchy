@@ -420,8 +420,7 @@ def get_statistic_token(symbol, url):
         percent_1h = float(statistic_token[0]['percent_change_1h'])
         percent_24h = float(statistic_token[0]['percent_change_24h'])
         percent_7d = float(statistic_token[0]['percent_change_7d'])
-        return volume, marketcap, percent_1h, percent_24h, percent_7d
-        
+        return volume, marketcap, percent_1h, percent_24h, percent_7d    
     except:
         volume = 1
         marketcap = 1
@@ -434,27 +433,20 @@ def get_statistic_token(symbol, url):
 #withdraw balance and check if there are usdt funds in the wallet
 def check_balance_withdraw(balance, amount, symbol, network, address, tag, timestamp):  
     usdt = get_balance('USDT', timestamp)
-    
     time.sleep(0.100)
-    
-    value = 5 if symbol != 'BTC' else 5
-
+    value = 5
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,value,usdt,timestamp) 
-    
-    time.sleep(0.500)
-
-    fee = get_withdrawfee(symbol,network,timestamp)
-    
+        buy_dca(symbol,value,usdt,timestamp)    
+    time.sleep(0.100)
+    fee = get_withdrawfee(symbol,network,timestamp)   
     try:
         fee_percentage = fee/amount
     except:
         fee_percentage = 1
-    
-    if fee_percentage < 0.05 and amount >= 20:
+    if fee_percentage < 0.05 and amount >= 10:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
@@ -502,10 +494,10 @@ def indicators(symbol):
     else:
         index_v = 0
 
-    index_end = (index_v*0.6 + index_w*0.4)*1.5
+    index_end = (index_v * 0.6 + index_w * 0.4) * 1.5
 
     #marketcap x volume daily
-    volume_marketcap = (volume_global / total_global)*100
+    volume_marketcap = (volume_global / total_global) * 100
 
     if volume_marketcap >= 10 or volume_marketcap <= -10:
         volume_w = 0
@@ -518,10 +510,10 @@ def indicators(symbol):
     else:
         volume_w = 0
         
-    volume_end = volume_w*0.075
+    volume_end = volume_w * 0.075
 
     #price changes
-    volume_marketcap_token = (volume_24h_token / total_marketcap_token)*100
+    volume_marketcap_token = (volume_24h_token / total_marketcap_token) * 100
 
     if volume_marketcap_token >= 10 and volume_marketcap_token <= -10:
         price_changes_w = 0
@@ -536,7 +528,7 @@ def indicators(symbol):
     else:
         price_changes_w = 0
   
-    price_changes_end = price_changes_w*0.375
+    price_changes_end = price_changes_w * 0.375
 
     #rsi
     if rsi_value >= 70: 
@@ -550,7 +542,7 @@ def indicators(symbol):
     else:
         rsi_w = 0
 
-    rsi_end = rsi_w*1.05
+    rsi_end = rsi_w * 1.05
 
     #resultant
     total_end = index_end + volume_end + price_changes_end + rsi_end
