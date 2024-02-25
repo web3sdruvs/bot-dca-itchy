@@ -479,9 +479,17 @@ def bot_telegram(msg_text):
     """
     BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
 
-#get the latest data of the fear and greed Index 
 #index <= 25 : Extreme Fear | index <= 46 : Fear | index >=47 : Neutral | index >= 55 : Greed | index >= 76 : Extreme Greed
 def get_index_fear_greed(url):
+    """
+    Get the latest data of the Fear and Greed Index.
+
+    Parameters:
+    - url (str): The URL to retrieve the Fear and Greed Index data.
+
+    Returns:
+    - tuple: A tuple containing the index values for the current day, yesterday, last week, and last month.
+    """
     get_index_feargreed = requests.get(url)
     get_index_feargreed = get_index_feargreed.json()
     get_index_feargreed = get_index_feargreed
