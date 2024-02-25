@@ -98,8 +98,19 @@ def get_sign(api_secret, payload):
     signature = hmac.new(api_secret.encode('utf-8'), payload.encode('utf-8'), digestmod=sha256).hexdigest()
     return signature
 
-#single request api call
 def send_request(method, path, urlpa, payload):
+    """
+    Make a call to the BingX API.
+
+    Parameters:
+    - method (str): HTTP method of the request (e.g., 'GET', 'POST').
+    - path (str): API endpoint path.
+    - urlpa (str): URL parameters.
+    - payload (str): Request data.
+
+    Returns:
+    - str: Content of the API response.
+    """
     url = '%s%s?%s&signature=%s' % (APIURL_BINGX, path, urlpa, get_sign(SECRETKEY_BINGX, urlpa))
     headers = {
         'X-BX-APIKEY': APIKEY_BINGX,
