@@ -632,3 +632,13 @@ def lambda_handler(event, context):
     return {
         'statusCode': 200,
     }
+
+"""
+#local test
+#mock event and context
+event = {'key1': 'value1', 'key2': 'value2'}
+context = {}
+
+#call the lambda_handler function locally
+lambda_handler(event, context)
+"""
