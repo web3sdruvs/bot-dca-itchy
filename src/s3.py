@@ -2,6 +2,16 @@
 import boto3
 
 def s3():
+    """
+    Retrieves data from an AWS S3 bucket, specifically a CSV file containing
+    token-related information. If the file does not exist, it initializes the file
+    with a header and returns a 500 status code.
+
+    Returns:
+    - dict: A dictionary containing the response status code.
+
+    Note: Make sure to replace 'YOUR BUCKET NAME' with the actual S3 bucket name.
+    """
     bucket_name = 'YOUR BUCKET NAME'
     file_name = 'token/token.csv'
     s3 = boto3.client('s3')
