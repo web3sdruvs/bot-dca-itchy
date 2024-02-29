@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
 from config import Config
-from hashlib import sha256
+import credential
 import numpy as np
 import boto3
 import telepot
 import requests
-import hmac
 import time
 import json
 import re
@@ -15,9 +14,6 @@ config = Config(config_file)
 statistic_token = config.get_statistic_token()
 statistic_global = config.get_statistic_global()
 get_index_feargreed = config.get_index_feargreed()
-APIURL_BINGX = config.get_api_url_bingx()
-APIKEY_BINGX = config.get_api_key_bingx()
-SECRETKEY_BINGX = config.get_api_secretkey_bingx()
 BOTKEY = config.get_api_key_telegram()
 CHATKEY = config.get_api_chatkey_telegram()
 ADDRESS_BINGX_ETH = config.get_address_bingx()
@@ -50,56 +46,6 @@ def handler():
         'statusCode': 200,
     }
  
-#get sign request secretkey to generate a signature
-def get_sign(api_secret, payload):
-    """
-    Generate a signature for authenticating an API request.
-
-    Parameters:
-    - api_secret (str): API secret key.
-    - payload (str): Request data to be signed.
-
-    Returns:
-    - str: Generated signature as a hexadecimal string.
-    """
-    signature = hmac.new(api_secret.encode('utf-8'), payload.encode('utf-8'), digestmod=sha256).hexdigest()
-    return signature
-
-#single request api call
-def send_request(method, path, urlpa, payload):
-    """
-    Make a call to the BingX API.
-
-    Parameters:
-    - method (str): HTTP method of the request (e.g., 'GET', 'POST').
-    - path (str): API endpoint path.
-    - urlpa (str): URL parameters.
-    - payload (str): Request data.
-
-    Returns:
-    - str: Content of the API response.
-    """
-    url = '%s%s?%s&signature=%s' % (APIURL_BINGX, path, urlpa, get_sign(SECRETKEY_BINGX, urlpa))
-    headers = {
-        'X-BX-APIKEY': APIKEY_BINGX,
-    }
-    response = requests.request(method, url, headers=headers, data=payload)
-    return response.text
-
-def prase_param(params_map):
-    """
-    Encapsulate parameters in a specific format for an API request.
-
-    Parameters:
-    - params_map (dict): Dictionary containing the request parameters.
-
-    Returns:
-    - str: Formatted string of parameters with timestamp added.
-    """
-    sortedKeys = sorted(params_map)
-    params_str = '&'.join(['%s=%s' % (x, params_map[x]) for x in sortedKeys])
-    return params_str+'&timestamp='+str(int(time.time() * 1000))
-
 def get_balance(symbol, timestamp):
     """
     Get the balance of a specific cryptocurrency symbol from the spot trading account.
@@ -118,8 +64,8 @@ def get_balance(symbol, timestamp):
     params_map = {
     'recvWindow': 0
     }
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
 
     if 'data' in json_data:    
         for balance in json_data['data']['balances']:
@@ -161,8 +107,8 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     'amount': amount,
     'walletType': 1
     }
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
 
     if 'data' in json_data:  
         result = json_data['data']['id']
@@ -198,8 +144,8 @@ def get_withdrawfee(symbol,network,timestamp):
     params_map = {
     "recvWindow": 0
     }
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
     
     if 'data' in json_data:  
       json_data = json_data['data']
@@ -248,8 +194,8 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'quoteOrderQty': quantity,
     'recvWindow': 0
     }
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
     if 'data' in json_data:
         orderId = json_data['data']['orderId']
         priceOrder = round(float(json_data['data']['price']),3)
@@ -326,8 +272,8 @@ def cancel_order(symbol, orderId, timestamp):
     'orderId': orderId,
     'recvWindow': 0
     }
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
     
     if 'data' in json_data:
         client_order_id = json_data['data']['client_order_id']
@@ -357,8 +303,8 @@ def get_price(symbol, timestamp):
     params_map = {
     'symbol': symbol +'-USDT'
     }
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
 
     if 'data' in json_data: 
         low = round(json_data['data'][0]['lowPrice'],4)
@@ -399,8 +345,8 @@ def get_rsi(symbol, timestamp):
     'endTime': end_epoch_timestamp,
     'limit' : 14
     }  
-    params_str = prase_param(params_map)
-    json_data = json.loads(send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
     
     if 'data' in json_data:
       opening = []
