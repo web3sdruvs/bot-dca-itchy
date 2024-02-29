@@ -1,6 +1,5 @@
 from hashlib import sha256
 from config import Config
-import numpy as np
 import requests
 import hmac
 import time
