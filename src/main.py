@@ -630,5 +630,5 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
     return orderid, priceorder, qty, status
 
-#execute
-handler()
+if __name__ == "__main__":
+    handler()
