@@ -71,8 +71,7 @@ def get_balance(symbol, timestamp):
         for balance in json_data['data']['balances']:
             if balance['asset'] == symbol:
                 amount = round(float(balance['free']),8)
-                break
-        return amount
+                return amount
     else: 
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
