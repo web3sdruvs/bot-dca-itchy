@@ -572,17 +572,17 @@ def indicators(symbol):
   
     price_changes_end = price_changes_w * 0.375
 
-    #rsi
-    if rsi_value >= 70: 
-        rsi_w = -0.7
-    elif rsi_value >= 50: 
-        rsi_w = 0.6
-    elif rsi_value > 30 and rsi_value < 50: 
-        rsi_w = 0.8
-    elif rsi_value <= 30: 
-        rsi_w = 1
-    else:
-        rsi_w = 0
+    match rsi_value:
+        case rsi_value if rsi_value >= 70:
+            rsi_w = -0.7
+        case rsi_value if rsi_value >= 50:
+            rsi_w = 0.6
+        case rsi_value  if 30 < rsi_value < 50: 
+            rsi_w = 0.8
+        case rsi_value if rsi_value <= 30:
+            rsi_w = 1
+        case _:
+            rsi_w = 0
 
     rsi_end = rsi_w * 1.05
 
