@@ -524,16 +524,17 @@ def indicators(symbol):
             index_w = 0
             index_class = 'Class Invalid'
 
-    if overview_trends < -5:
-        index_v = 1
-    elif overview_trends < -4:
-        index_v = 0.7
-    elif overview_trends < -3:
-        index_v = 0.2
-    elif overview_trends < 1:
-        index_v = 0.01
-    else:
-        index_v = 0
+    match overview_trends:
+        case overview_trends if overview_trends < -5:
+            index_v = 1
+        case overview_trends if overview_trends < -4:
+            index_v = 0.7
+        case overview_trends if overview_trends < -3:
+            index_v = 0.2
+        case overview_trends if overview_trends < 1:
+            index_v = 0.01
+        case _:
+            index_v = 0
 
     index_end = (index_v * 0.6 + index_w * 0.4) * 1.5
 
