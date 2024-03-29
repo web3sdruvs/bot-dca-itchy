@@ -524,23 +524,25 @@ def indicators(symbol):
     overview_trends = sum(trends)/len(trends)
 
     #index fear and greed
-    if index_current <= 25:
-        index_w = 1
-        index_class = 'Extreme Fear'
-    elif index_current <= 46:
-        index_w = 0.7
-        index_class = 'Fear'
-    elif index_current >= 47 and index_current <= 54:
-        index_w = 0.2
-        index_class = 'Neutral'
-    elif index_current >= 55 and index_current <= 75:
-        index_w = -0.4
-        index_class = 'Greed'
-    elif index_current >= 76:
-        index_w = -0.6
-        index_class = 'Extreme Greed'
-    else:
-        index_w = 0
+    match index_current:
+        case index_current if index_current <= 25:
+            index_w = 1
+            index_class = 'Extreme Fear'
+        case index_current if index_current <= 46:
+            index_w = 0.7
+            index_class = 'Fear'
+        case index_current if  47 <= index_current <= 54:
+            index_w = 0.2
+            index_class = 'Neutral'
+        case index_current if  55 <= index_current <= 75:
+            index_w = -0.4
+            index_class = 'Greed'
+        case index_current if 76 <= index_current <= 100:
+            index_w = -0.6
+            index_class = 'Extreme Greed'
+        case _:
+            index_w = 0
+            index_class = 'Class Invalid'
 
     if overview_trends < -5:
         index_v = 1
