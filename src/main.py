@@ -67,11 +67,12 @@ def get_balance(symbol, timestamp):
     params_str = credential.prase_param(params_map)
     json_data = json.loads(credential.send_request(method, path, params_str, payload))
 
-    if 'data' in json_data:    
+    if 'data' in json_data:  
+        amount = 0.0  
         for balance in json_data['data']['balances']:
             if balance['asset'] == symbol:
                 amount = round(float(balance['free']),8)
-                return amount
+        return amount
     else: 
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
