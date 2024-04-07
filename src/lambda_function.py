@@ -609,9 +609,12 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     quantity = quantity*total_end
     quantity = 5 if quantity < 5 else quantity
     quantity = usdt if quantity > usdt else quantity
-    orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
-    return orderid, priceorder, qty, status
-
+    if total_end < 0.70:
+        orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
+        return orderid, priceorder, qty, status
+    else:
+        bot_telegram('⚠️Alert\\!\n\nPurchase not executed, price too inflated.\n\nMultiplier '+total_end.replace('.', '\\.'))
+    
 def lambda_handler(event, context):
     """
     Create a handler function that can be used as handler in AWS Lambda console.
