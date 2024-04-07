@@ -452,6 +452,7 @@ def get_statistic_token(symbol, url):
     """
     statistic_token = requests.get(url)
     statistic_token =  statistic_token.json() 
+    
     for i in statistic_token:
         i['id'] = i['symbol']   
     try:
@@ -485,6 +486,7 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
     usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
     value = 5
+    
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
@@ -492,10 +494,12 @@ def check_balance_withdraw(balance, amount, symbol, network, address, tag, times
         buy_dca(symbol,value,usdt,timestamp)    
     time.sleep(0.100)
     fee = get_withdrawfee(symbol,network,timestamp)   
+    
     try:
         fee_percentage = fee / amount
     except:
         fee_percentage = 1
+        
     if fee_percentage < 0.05 and amount >= 10:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
@@ -603,12 +607,9 @@ def indicators(symbol):
             rsi_w = 1
         case _:
             rsi_w = 0
-
     rsi_end = rsi_w * 1.05
-
-    #resultant
+    
     total_end = index_end + volume_end + price_changes_end + rsi_end
-
     return index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end
 
 #buy using dca by intensity
@@ -629,6 +630,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     quantity = quantity*total_end
     quantity = 5 if quantity < 5 else quantity
     quantity = usdt if quantity > usdt else quantity
+    
     if total_end < 0.70:
         orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
         return orderid, priceorder, qty, status
