@@ -631,11 +631,18 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     quantity = 5 if quantity < 5 else quantity
     quantity = usdt if quantity > usdt else quantity
     
-    if total_end < 0.70:
+    if total_end > 0.70:
         orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
         return orderid, priceorder, qty, status
     else:
-        bot_telegram('⚠️Alert\\!\n\nPurchase not executed, price too inflated.\n\nMultiplier '+total_end.replace('.', '\\.'))
+        bot_telegram('⚠️Alert\\!\n\nPurchase not executed, price too inflated\\.\n\n'
+                +'Index: '+str(index_current).replace('.', '\\.')+' \\('+index_class+'\\)'
+                +'\nIntensity: '+str(round(total_end,2)).replace('.', '\\.').replace('-', '\\-')
+                +'\nRSI: '+str(round(rsi_value,2)).replace('.', '\\.')+'%'
+                +'\nBTC Dominance: '+str(round(dominance_btc_global,2)).replace('.', '\\.')+'%'
+                +'\n1H Units: '+str(round(percent_1h_token,2)).replace('.', '\\.').replace('-', '\\-')+'%\n24H Units: '
+                +str(round(percent_24h_token,2)).replace('.', '\\.').replace('-', '\\-')+'%\n7D Units: '
+                +str(round(percent_7d_token,2)).replace('.', '\\.').replace('-', '\\-')+'%') 
 
 if __name__ == "__main__":
     handler()
