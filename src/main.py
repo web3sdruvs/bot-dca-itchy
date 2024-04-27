@@ -630,7 +630,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
     quantity = quantity*total_end
     quantity = 5 if quantity < 5 else quantity
-    quantity = usdt if quantity > usdt else quantity
+    quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity
     
     if total_end > 0.51:
         orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
