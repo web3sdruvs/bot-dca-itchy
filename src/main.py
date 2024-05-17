@@ -1,8 +1,10 @@
+from logging import info, error, basicConfig, INFO
 from processing import check_balance_and_trade
 from messaging_bot import bot_telegram
+from transaction_handler import get_balance, get_price
 from config import Config
-import transaction_handler
-    
+
+basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')   
 config_file = 'config.ini'
 config = Config(config_file)
 statistic_token = config.get_statistic_token()
@@ -27,13 +29,15 @@ def lambda_handler(event, context):
     - dict: A dictionary containing a simple status code.        
     """
     for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
-        qty_token = transaction_handler.get_balance(token_symbol[i], current_time)
-        price_low, price_current, price_last = transaction_handler.get_price(token_symbol[i], current_time)
+        qty_token = get_balance(token_symbol[i], current_time)
+        price_low, price_current, price_last = get_price(token_symbol[i], current_time)
         if qty_token is not None:
             check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
+            info(f'Function lambda handler: token {token_symbol}')
         else: 
             bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
+            error(f'Function lambda handler: token {token_symbol}')
     return {
         'statusCode': 200,
     }

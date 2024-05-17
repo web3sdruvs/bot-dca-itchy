@@ -1,6 +1,8 @@
+from logging import info, error, basicConfig, INFO
 from config import Config
 import telepot
-    
+
+basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')   
 config_file = 'config.ini'
 config = Config(config_file)
 BOTKEY = config.get_api_key_telegram()
@@ -18,3 +20,4 @@ def bot_telegram(msg_text):
     - None
     """
     BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
+    info(f'Function bot_telegram')

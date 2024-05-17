@@ -1,7 +1,7 @@
+from transaction_handler import get_candlestick_chart_data, place_order, get_balance, get_withdrawfee
 from fetch_data import get_index_fear_greed, get_statistic_global, get_statistic_token
 from messaging_bot import bot_telegram
 from config import Config
-import transaction_handler
 import numpy as np
 import time
 import re
@@ -27,7 +27,7 @@ def get_rsi(symbol, timestamp):
     - float: If successful, returns the calculated RSI value.
     - str: If an error occurs, returns the error message.
     """
-    json_data = transaction_handler.get_candlestick_chart_data(symbol, timestamp)
+    json_data = get_candlestick_chart_data(symbol, timestamp)
     
     if 'data' in json_data:
       opening = []
@@ -78,7 +78,7 @@ def check_balance_and_trade(balance, amount, symbol, network, address, tag, time
     Returns:
     - None
     """
-    usdt = transaction_handler.get_balance('USDT', timestamp)
+    usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
     value = 5
     
@@ -88,7 +88,7 @@ def check_balance_and_trade(balance, amount, symbol, network, address, tag, time
     else:
         buy_dca(symbol,value,usdt,timestamp)    
     time.sleep(0.100)
-    fee = transaction_handler.get_withdrawfee(symbol,network,timestamp)   
+    fee = get_withdrawfee(symbol,network,timestamp)   
     
     try:
         fee_percentage = fee / amount
@@ -228,7 +228,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity
         
     if total_end > 0.51:
-        orderid, priceorder, qty, status = transaction_handler.place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
+        orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
         return orderid, priceorder, qty, status
     else:
         bot_telegram('⚠️Alert\\!\n\nPurchase not executed, price too inflated\\.\n\n'
