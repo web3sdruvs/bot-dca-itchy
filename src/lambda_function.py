@@ -678,4 +678,5 @@ def lambda_handler(event, context):
 
 #local test
 #call the lambda_handler function locally
-lambda_handler({'key1': 'value1', 'key2': 'value2'}, {})
+if __name__ == "__main__":
+    lambda_handler({'key1': 'value1', 'key2': 'value2'}, {})

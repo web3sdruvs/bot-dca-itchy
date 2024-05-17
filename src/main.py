@@ -23,26 +23,6 @@ address_destination = config.get_token_address()
 current_time = config.get_current_time()
 re_default = r'[^a-zA-Z0-9\s]'
 
-#handler function is a function that deals with specific events or requests in a program
-def handler():
-    """
-    Handler function that processes events or requests for multiple tokens.
-
-    Returns:
-    - dict: A dictionary containing a simple status code.
-    """
-    for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
-        qty_token = get_balance(token_symbol[i], current_time)
-        price_low, price_current, price_last = get_price(token_symbol[i], current_time)
-        if qty_token is not None:
-            check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
-        else: 
-            bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
-                +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
-    return {
-        'statusCode': 200,
-    }
- 
 def get_balance(symbol, timestamp):
     """
     Get the balance of a specific cryptocurrency symbol from the spot trading account.
@@ -671,6 +651,26 @@ def buy_dca(symbol, quantity, usdt,timestamp):
                 +'\n1H Units: '+str(round(percent_1h_token,2)).replace('.', '\\.').replace('-', '\\-')+'%\n24H Units: '
                 +str(round(percent_24h_token,2)).replace('.', '\\.').replace('-', '\\-')+'%\n7D Units: '
                 +str(round(percent_7d_token,2)).replace('.', '\\.').replace('-', '\\-')+'%') 
+
+#handler function is a function that deals with specific events or requests in a program
+def handler():
+    """
+    Handler function that processes events or requests for multiple tokens.
+
+    Returns:
+    - dict: A dictionary containing a simple status code.
+    """
+    for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
+        qty_token = get_balance(token_symbol[i], current_time)
+        price_low, price_current, price_last = get_price(token_symbol[i], current_time)
+        if qty_token is not None:
+            check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
+        else: 
+            bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
+                +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
+    return {
+        'statusCode': 200,
+    }
 
 if __name__ == "__main__":
     handler()
