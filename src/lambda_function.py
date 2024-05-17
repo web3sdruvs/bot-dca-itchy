@@ -7,10 +7,6 @@ from config import Config
 basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')   
 config_file = 'config.ini'
 config = Config(config_file)
-statistic_token = config.get_statistic_token()
-statistic_global = config.get_statistic_global()
-get_index_feargreed = config.get_index_feargreed()
-ADDRESS_BINGX_ETH = config.get_address_bingx()
 token_symbol = config.get_token_symbol()
 network_blockchain = config.get_blockchain_network()
 address_tag = config.get_tag_wallet()
@@ -38,6 +34,7 @@ def lambda_handler(event, context):
             error(f'Function lambda_handler: token {token_symbol}')
             bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
+    info('Execution completed')
     return {
         'statusCode': 200,
     }
