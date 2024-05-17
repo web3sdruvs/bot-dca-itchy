@@ -317,7 +317,52 @@ def get_price(symbol, timestamp):
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+error)
         return error
+    
+def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
+    """
+    Fetch candlestick chart data for a specified cryptocurrency symbol.
 
+    This function retrieves candlestick  data for a given cryptocurrency
+    symbol against USDT from an API. The data fetched covers the past 14 days by default
+    with a specified interval.
+
+    Args:
+        symbol (str): The cryptocurrency symbol to fetch data for (e.g., 'BTC').
+        timestamp (str): The current timestamp in a specific format.
+        limit (int, optional): The maximum number of data points to retrieve. Defaults to 14.
+        interval (str, optional): The interval for each candlestick (e.g., '1d', '1h'). Defaults to '1d'.
+
+    Returns:
+        dict: The JSON response containing candlestick data if successful.
+        str: The error message if the API call fails.
+    """
+    current_datetime = datetime.now()
+    resultant_date = current_datetime - timedelta(days=14)
+    desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
+    start_epoch_timestamp = int(str(int(desired_time.timestamp()))+'000')
+    end_epoch_timestamp = int(str(int(time.time()))+'000')
+    payload = {}
+    path = '/openApi/spot/v1/market/kline'
+    method = 'GET'
+    params_map = {
+    'symbol': symbol +'-USDT',
+    'interval': interval,
+    'startTime': start_epoch_timestamp,
+    'endTime': end_epoch_timestamp,
+    'limit' : limit
+    }  
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    
+    if 'data' in json_data:
+      return json_data  
+    else:
+        error = json_data['msg']
+        error = re.sub(re_default, ' ', str(error))
+        bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_candlestick\n\nError: '+error)
+        return error
+    
 def get_rsi(symbol, timestamp):
     """
     Calculate the Relative Strength Index (RSI) for a given cryptocurrency symbol over a 14-day period.
@@ -330,23 +375,7 @@ def get_rsi(symbol, timestamp):
     - float: If successful, returns the calculated RSI value.
     - str: If an error occurs, returns the error message.
     """
-    current_datetime = datetime.now()
-    resultant_date = current_datetime - timedelta(days=14)
-    desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
-    start_epoch_timestamp = int(str(int(desired_time.timestamp()))+'000')
-    end_epoch_timestamp = int(str(int(time.time()))+'000')
-    payload = {}
-    path = '/openApi/spot/v1/market/kline'
-    method = 'GET'
-    params_map = {
-    'symbol': symbol +'-USDT',
-    'interval': '1d',
-    'startTime': start_epoch_timestamp,
-    'endTime': end_epoch_timestamp,
-    'limit' : 14
-    }  
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    json_data = get_candlestick_chart_data(symbol, timestamp)
     
     if 'data' in json_data:
       opening = []
