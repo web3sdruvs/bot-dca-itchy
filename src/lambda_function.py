@@ -298,7 +298,7 @@ def get_price(symbol, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+error)
         return error
 
-def get_rsi(symbol, timestamp):
+def get_rsi(symbol, timestamp, limit=14, interval='1d'):
     """
     Calculate the Relative Strength Index (RSI) for a given cryptocurrency symbol over a 14-day period.
 
@@ -320,14 +320,14 @@ def get_rsi(symbol, timestamp):
     method = 'GET'
     params_map = {
     'symbol': symbol +'-USDT',
-    'interval': '1d',
+    'interval': interval,
     'startTime': start_epoch_timestamp,
     'endTime': end_epoch_timestamp,
-    'limit' : 14
+    'limit' : limit
     }  
     params_str = credential.prase_param(params_map)
     json_data = json.loads(credential.send_request(method, path, params_str, payload))
-    
+    print(json_data)
     if 'data' in json_data:
       opening = []
       closing = []
@@ -647,7 +647,7 @@ def lambda_handler(event, context):
     return {
         'statusCode': 200,
     }
-
+'''
 #local test
 #mock event and context
 event = {'key1': 'value1', 'key2': 'value2'}
@@ -655,3 +655,6 @@ context = {}
 
 #call the lambda_handler function locally
 lambda_handler(event, context)
+'''
+
+get_rsi('XRD', current_time)
