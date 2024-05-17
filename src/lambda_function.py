@@ -298,6 +298,35 @@ def get_price(symbol, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+error)
         return error
 
+def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
+    current_datetime = datetime.now()
+    resultant_date = current_datetime - timedelta(days=14)
+    desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
+    start_epoch_timestamp = int(str(int(desired_time.timestamp()))+'000')
+    end_epoch_timestamp = int(str(int(time.time()))+'000')
+    payload = {}
+    path = '/openApi/spot/v1/market/kline'
+    method = 'GET'
+    params_map = {
+    'symbol': symbol +'-USDT',
+    'interval': interval,
+    'startTime': start_epoch_timestamp,
+    'endTime': end_epoch_timestamp,
+    'limit' : limit
+    }  
+    params_str = credential.prase_param(params_map)
+    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    print(json_data)
+    
+    if 'data' in json_data:
+      return json_data  
+    else:
+        error = json_data['msg']
+        error = re.sub(re_default, ' ', str(error))
+        bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_candlestick\n\nError: '+error)
+        return error
+
 def get_rsi(symbol, timestamp, limit=14, interval='1d'):
     """
     Calculate the Relative Strength Index (RSI) for a given cryptocurrency symbol over a 14-day period.
