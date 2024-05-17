@@ -19,5 +19,8 @@ def bot_telegram(msg_text):
     Returns:
     - None
     """
-    BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
-    info(f'Function bot_telegram')
+    try:
+        info(f'Function bot_telegram')
+        BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
+    except:
+        error(f'Function bot_telegram')

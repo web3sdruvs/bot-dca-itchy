@@ -35,9 +35,9 @@ def lambda_handler(event, context):
             info(f'Function lambda handler: token {token_symbol[i]}')
             check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
         else: 
+            error(f'Function lambda handler: token {token_symbol}')
             bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
-            error(f'Function lambda handler: token {token_symbol}')
     return {
         'statusCode': 200,
     }

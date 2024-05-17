@@ -1,11 +1,13 @@
 from transaction_handler import get_candlestick_chart_data, place_order, get_balance, get_withdrawfee
 from fetch_data import get_index_fear_greed, get_statistic_global, get_statistic_token
+from logging import info, error, basicConfig, INFO
 from messaging_bot import bot_telegram
 from config import Config
 import numpy as np
 import time
 import re
-    
+
+basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')       
 config_file = 'config.ini'
 config = Config(config_file)
 statistic_token = config.get_statistic_token()
@@ -54,8 +56,10 @@ def get_rsi(symbol, timestamp):
       rs = [moving_average_gains[i] / moving_average_losses[i] for i in range(len(moving_average_gains))]
       rsi = [100 - (100 / (1 + rs_value)) for rs_value in rs]
       rsi = rsi[0]
+      info(f'Function get_rsi: token {symbol}')
       return rsi  
     else:
+        error(f'Function get_rsi: token {symbol}')
         error = json_data['msg']
         error = re.sub(re_default, ' ', str(error))
         bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
@@ -81,7 +85,7 @@ def check_balance_and_trade(balance, amount, symbol, network, address, tag, time
     usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
     value = 5
-    
+    info(f'Function check_balance_and_trade: token {symbol}')
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
