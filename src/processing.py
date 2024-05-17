@@ -116,7 +116,7 @@ def indicators(symbol):
     """
     index_current, index_yesterday, index_last_week, index_last_month = get_index_fear_greed(get_index_feargreed)
     total_global, volume_global, dominance_btc_global = get_statistic_global(statistic_global)
-    volume_24h_token, total_marketcap_token, percent_1h_token, percent_24h_token, percent_7d_token = get_statistic_token(symbol if 'WBTC' != symbol else 'BTC', statistic_token)
+    volume_24h_token, total_marketcap_token, percent_1h_token, percent_24h_token, percent_7d_token = get_statistic_token(symbol if 'WBTC' != symbol else 'BTC', statistic_token, current_time)
     rsi_value = get_rsi(symbol if 'WBTC' != symbol else 'BTC', current_time)
     array_index = [index_current, index_yesterday, index_last_week, index_last_month]
     trends = [((index_current - array_number) / array_number) * 100 for array_number in array_index]
