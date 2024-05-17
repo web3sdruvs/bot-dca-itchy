@@ -29,13 +29,13 @@ def lambda_handler(event, context):
     - dict: A dictionary containing a simple status code.        
     """
     for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
+        info(f'Function lambda_handler: token {token_symbol[i]}')
         qty_token = get_balance(token_symbol[i], current_time)
         price_low, price_current, price_last = get_price(token_symbol[i], current_time)
         if qty_token is not None:
-            info(f'Function lambda handler: token {token_symbol[i]}')
             check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
         else: 
-            error(f'Function lambda handler: token {token_symbol}')
+            error(f'Function lambda_handler: token {token_symbol}')
             bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
     return {

@@ -1,5 +1,8 @@
+from logging import info, error, basicConfig, INFO
 import transaction_handler
 import requests
+
+basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')   
     
 #index <= 25 : Extreme Fear | index <= 46 : Fear | index >=47 : Neutral | index >= 55 : Greed | index >= 76 : Extreme Greed
 def get_index_fear_greed(url):
@@ -12,6 +15,7 @@ def get_index_fear_greed(url):
     Returns:
     - tuple: A tuple containing the index values for the current day, yesterday, last week, and last month.
     """
+    info(f'Function get_index_fear_greed')
     get_index_feargreed = requests.get(url)
     get_index_feargreed = get_index_feargreed.json()
     get_index_feargreed = get_index_feargreed
@@ -41,6 +45,7 @@ def get_statistic_global(url):
     Returns:
     - tuple: a tuple containing the total market value, 24-hour trading volume and Bitcoin dominance.
     """
+    info(f'Function get_statistic_global')
     statistic_global = requests.get(url)
     statistic_global = statistic_global.json()
     total = statistic_global['total_market_cap_usd']
@@ -59,6 +64,7 @@ def get_statistic_token(symbol, url, timestamp):
     Returns:
     - tuple: A tuple containing the 24-hour trading volume, market cap, and percentage changes in 1h, 24h, and 7d.
     """
+    info(f'Function get_statistic_token')
     statistic_token = requests.get(url)
     statistic_token =  statistic_token.json() 
     for i in statistic_token:

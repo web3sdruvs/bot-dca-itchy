@@ -29,8 +29,8 @@ def get_rsi(symbol, timestamp):
     - float: If successful, returns the calculated RSI value.
     - str: If an error occurs, returns the error message.
     """
+    info(f'Function get_rsi: token {symbol}')
     json_data = get_candlestick_chart_data(symbol, timestamp)
-    
     if 'data' in json_data:
       opening = []
       closing = []
@@ -56,7 +56,6 @@ def get_rsi(symbol, timestamp):
       rs = [moving_average_gains[i] / moving_average_losses[i] for i in range(len(moving_average_gains))]
       rsi = [100 - (100 / (1 + rs_value)) for rs_value in rs]
       rsi = rsi[0]
-      info(f'Function get_rsi: token {symbol}')
       return rsi  
     else:
         error(f'Function get_rsi: token {symbol}')
@@ -82,10 +81,10 @@ def check_balance_and_trade(balance, amount, symbol, network, address, tag, time
     Returns:
     - None
     """
+    info(f'Function check_balance_and_trade: token {symbol}')
     usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
     value = 5
-    info(f'Function check_balance_and_trade: token {symbol}')
     if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
                     +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
@@ -118,6 +117,7 @@ def indicators(symbol):
     Returns:
     - tuple: A tuple containing the calculated indicators for the token.
     """
+    info(f'Function indicators: token {symbol}')
     index_current, index_yesterday, index_last_week, index_last_month = get_index_fear_greed(get_index_feargreed)
     total_global, volume_global, dominance_btc_global = get_statistic_global(statistic_global)
     volume_24h_token, total_marketcap_token, percent_1h_token, percent_24h_token, percent_7d_token = get_statistic_token(symbol if 'WBTC' != symbol else 'BTC', statistic_token, current_time)
@@ -125,7 +125,6 @@ def indicators(symbol):
     array_index = [index_current, index_yesterday, index_last_week, index_last_month]
     trends = [((index_current - array_number) / array_number) * 100 for array_number in array_index]
     overview_trends = sum(trends)/len(trends)
-    info(f'Function indicators: token {symbol}')
     #index fear and greed
     match index_current:
         case index_current if index_current <= 25:
@@ -225,12 +224,12 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     Returns:
     - tuple: A tuple containing the order ID, price, quantity, and status of the DCA purchase.
     """
+    info(f'Function buy_dca: token {symbol}')
     index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
     quantity = quantity if usdt < 60 else (usdt / 12) * ((5 ** (1 / 2) + 1) / 2)
     quantity = quantity * total_end
     quantity = 5 if quantity < 5 else quantity
-    quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity
-    info(f'Function buy_dca: token {symbol}')    
+    quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity    
     if total_end > 0.51:
         orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
         return orderid, priceorder, qty, status

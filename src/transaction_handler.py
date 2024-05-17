@@ -1,3 +1,4 @@
+from logging import info, error, basicConfig, INFO
 from datetime import datetime, timedelta
 from messaging_bot import bot_telegram
 from config import Config
@@ -6,7 +7,8 @@ import boto3
 import time
 import json
 import re
-    
+
+basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')           
 config_file = 'config.ini'
 config = Config(config_file)
 BUCKET_BOT_DCA_ITCHY = config.get_bucket_name()
@@ -24,6 +26,7 @@ def get_balance(symbol, timestamp):
     - float: The balance of the specified cryptocurrency symbol.
     - str: If an error occurs, return the error message.
     """
+    info(f'Function get_balance: token {symbol}')
     payload = {}
     path = '/openApi/spot/v1/account/balance'
     method = 'GET'
@@ -39,11 +42,12 @@ def get_balance(symbol, timestamp):
             if balance['asset'] == symbol:
                 amount = round(float(balance['free']),8)
         return amount
-    else: 
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+    else:
+        error(f'Function get_balance: token {symbol}') 
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_balance\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_balance\n\nError: '+_error)
         return error
 
 def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
@@ -62,6 +66,7 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     - int: If successful, returns the withdrawal request ID.
     - str: If an error occurs, returns the error message.
     """
+    info(f'Function request_withdraw: token {symbol}')
     payload = {}
     path = '/openApi/wallets/v1/capital/withdraw/apply'
     method = 'POST'
@@ -83,10 +88,11 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
             +address+'`\n\nTransaction ID:\n`'+str(result)+'`')
         return result
     else:
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+        error(f'Function request_withdraw: token {symbol}')
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+_error)
         return error
     
 def get_withdrawfee(symbol,network,timestamp):
@@ -102,6 +108,7 @@ def get_withdrawfee(symbol,network,timestamp):
     - float: The withdrawal fee for the specified cryptocurrency and network.
     - str: If an error occurs, returns the error message.
     """
+    info(f'Function get_withdrawfee: token {symbol}')
     network_fee = float(0.0)
     network = network.upper()
     payload = {}
@@ -122,10 +129,11 @@ def get_withdrawfee(symbol,network,timestamp):
             network_fee = float(fee['withdrawFee'])
             return network_fee
     else: 
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+        error(f'Function get_withdrawfee: token {symbol}')
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_withdrawfee\n\nError: '+error)
+                +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_withdrawfee\n\nError: '+_error)
         return error
 
 def place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity):
@@ -149,6 +157,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     - dict: If successful, returns a dictionary containing order details and market information.
     - dict: If an error occurs, returns a dictionary with the 'statusCode' key set to 500.
     """
+    info(f'Function place_order: token {symbol}')
     payload = {}
     path = '/openApi/spot/v1/trade/order'
     method = 'POST'
@@ -211,10 +220,11 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         return orderId, priceOrder, qty, status 
      
     else:
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+        error(f'Function place_order: token {symbol}')
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: place\\_order\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: place\\_order\n\nError: '+_error)
         return error
 
 def cancel_order(symbol, orderId, timestamp):
@@ -230,6 +240,7 @@ def cancel_order(symbol, orderId, timestamp):
     - int: If successful, returns the client order ID of the canceled order.
     - str: If an error occurs, returns the error message.
     """
+    info(f'Function cancel_order: token {symbol}')
     payload = {}
     path = '/openApi/spot/v1/trade/cancel'
     method = 'POST'
@@ -245,10 +256,11 @@ def cancel_order(symbol, orderId, timestamp):
         client_order_id = json_data['data']['client_order_id']
         return client_order_id
     else: 
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+        error(f'Function cancel_order: token {symbol}')
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: cancel\\_order\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: cancel\\_order\n\nError: '+_error)
         return error
 
 def get_price(symbol, timestamp):
@@ -263,6 +275,7 @@ def get_price(symbol, timestamp):
     - tuple: If successful, returns a tuple containing the 24-hour minimum price, current price, and price changes.
     - str: If an error occurs, returns the error message.
     """
+    info(f'Function get_price: token {symbol}')
     payload = {}
     path = '/openApi/spot/v1/ticker/24hr'
     method = 'GET'
@@ -278,10 +291,11 @@ def get_price(symbol, timestamp):
         changes = round(json_data['data'][0]['openPrice'],4)
         return low, current, changes
     else:
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+        error(f'Function get_price: token {symbol}')
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+_error)
         return error
 
 def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
@@ -302,6 +316,7 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
         dict: The JSON response containing candlestick data if successful.
         str: The error message if the API call fails.
     """
+    info(f'Function get_candlestick_chart_data: token {symbol}')
     current_datetime = datetime.now()
     resultant_date = current_datetime - timedelta(days=14)
     desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
@@ -323,8 +338,9 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
     if 'data' in json_data:
       return json_data  
     else:
-        error = json_data['msg']
-        error = re.sub(re_default, ' ', str(error))
+        error(f'Function get_candlestick_chart_data: token {symbol}')
+        _error = json_data['msg']
+        _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
-                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_candlestick\n\nError: '+error)
+                     +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_candlestick\n\nError: '+_error)
         return error
