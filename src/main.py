@@ -453,7 +453,6 @@ def get_statistic_token(symbol, url):
     """
     statistic_token = requests.get(url)
     statistic_token =  statistic_token.json() 
-    
     for i in statistic_token:
         i['id'] = i['symbol']   
     try:
@@ -465,8 +464,21 @@ def get_statistic_token(symbol, url):
         percent_7d = float(statistic_token[0]['percent_change_7d'])
         return volume, marketcap, percent_1h, percent_24h, percent_7d    
     except:
-        volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
-        return volume, marketcap, percent_1h, percent_24h, percent_7d
+        try:
+            #Abstract into a later function
+            candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1h')
+            percent_1h = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+
+            candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1d')
+            percent_24h = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+            volume = marketcap = candlestick_list['data'][0][5]
+            
+            candlestick_list = get_candlestick_chart_data('XRD', current_time, 7, '1d')
+            percent_7d = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+            return volume, marketcap, percent_1h, percent_24h, percent_7d
+        except:
+            volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
+            return volume, marketcap, percent_1h, percent_24h, percent_7d
         
 def check_balance_and_trade(balance, amount, symbol, network, address, tag, timestamp):  
     """

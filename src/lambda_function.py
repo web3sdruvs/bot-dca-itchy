@@ -458,13 +458,13 @@ def get_statistic_token(symbol, url):
     except:
         try:
             #Abstract into a later function
-            volume = marketcap = 1e-7
             candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1h')
             percent_1h = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
 
             candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1d')
             percent_24h = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
-
+            volume = marketcap = candlestick_list['data'][0][5]
+            
             candlestick_list = get_candlestick_chart_data('XRD', current_time, 7, '1d')
             percent_7d = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
             return volume, marketcap, percent_1h, percent_24h, percent_7d
@@ -671,7 +671,7 @@ def lambda_handler(event, context):
     return {
         'statusCode': 200,
     }
-'''
+
 #local test
 #mock event and context
 event = {'key1': 'value1', 'key2': 'value2'}
@@ -679,4 +679,3 @@ context = {}
 
 #call the lambda_handler function locally
 lambda_handler(event, context)
-'''
