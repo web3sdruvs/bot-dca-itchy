@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from config import Config
+from messaging_bot import bot_telegram
 import credential
 import numpy as np
 import boto3
