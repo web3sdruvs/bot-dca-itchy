@@ -476,14 +476,15 @@ def get_statistic_token(symbol, url):
         try:
             #Abstract into a later function
             candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1h')
-            percent_1h = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+            percent_1h = ((candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1)*100
 
             candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1d')
-            percent_24h = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
-            volume = marketcap = candlestick_list['data'][0][5]
+            percent_24h = ((candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1)*100
+            volume = candlestick_list['data'][0][5]
+            marketcap = (candlestick_list['data'][0][5])*20
             
             candlestick_list = get_candlestick_chart_data('XRD', current_time, 7, '1d')
-            percent_7d = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+            percent_7d = ((candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1)*100
             return volume, marketcap, percent_1h, percent_24h, percent_7d
         except:
             volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
