@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
+from messaging_bot import bot_telegram
 from config import Config
 import credential
 import numpy as np
 import boto3
-import telepot
 import requests
 import time
 import json
@@ -14,10 +14,7 @@ config = Config(config_file)
 statistic_token = config.get_statistic_token()
 statistic_global = config.get_statistic_global()
 get_index_feargreed = config.get_index_feargreed()
-BOTKEY = config.get_api_key_telegram()
-CHATKEY = config.get_api_chatkey_telegram()
 ADDRESS_BINGX_ETH = config.get_address_bingx()
-BOTKEY = telepot.Bot(BOTKEY)
 BUCKET_BOT_DCA_ITCHY = config.get_bucket_name()
 token_symbol = config.get_token_symbol()
 network_blockchain = config.get_blockchain_network()
@@ -409,18 +406,6 @@ def get_rsi(symbol, timestamp):
         bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_rsi\n\nError: '+error)
         return error
-
-def bot_telegram(msg_text):
-    """
-    Send a message to a specified Telegram chat using the provided message text.
-
-    Parameters:
-    - msg_text (str): The text of the message to be sent.
-
-    Returns:
-    - None
-    """
-    BOTKEY.sendMessage(CHATKEY, msg_text, parse_mode='MarkdownV2')
 
 #index <= 25 : Extreme Fear | index <= 46 : Fear | index >=47 : Neutral | index >= 55 : Greed | index >= 76 : Extreme Greed
 def get_index_fear_greed(url):

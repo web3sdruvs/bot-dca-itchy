@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
-from config import Config
 from messaging_bot import bot_telegram
+from config import Config
 import credential
 import numpy as np
 import boto3
-import telepot
 import requests
 import time
 import json
