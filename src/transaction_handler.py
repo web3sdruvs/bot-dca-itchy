@@ -9,7 +9,6 @@ import re
     
 config_file = 'config.ini'
 config = Config(config_file)
-ADDRESS_BINGX_ETH = config.get_address_bingx()
 BUCKET_BOT_DCA_ITCHY = config.get_bucket_name()
 re_default = r'[^a-zA-Z0-9\s]'
 

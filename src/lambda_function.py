@@ -322,7 +322,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity
         
     if total_end > 0.51:
-        orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
+        orderid, priceorder, qty, status = transaction_handler.place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
         return orderid, priceorder, qty, status
     else:
         bot_telegram('⚠️Alert\\!\n\nPurchase not executed, price too inflated\\.\n\n'
@@ -346,8 +346,8 @@ def lambda_handler(event, context):
     - dict: A dictionary containing a simple status code.        
     """
     for i in range(len(token_symbol)): #enable this loop when it becomes possible to implement the purchase of more than 1 token
-        qty_token = get_balance(token_symbol[i], current_time)
-        price_low, price_current, price_last = get_price(token_symbol[i], current_time)
+        qty_token = transaction_handler.get_balance(token_symbol[i], current_time)
+        price_low, price_current, price_last = transaction_handler.get_price(token_symbol[i], current_time)
         if qty_token is not None:
             check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
         else: 
