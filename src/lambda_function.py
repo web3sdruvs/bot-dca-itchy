@@ -650,7 +650,8 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     - tuple: A tuple containing the order ID, price, quantity, and status of the DCA purchase.
     """
     index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
-    quantity = quantity*total_end
+    quantity = quantity if usdt < 60 else (usdt / 12) * ((5 ** (1 / 2) + 1) / 2)
+    quantity = quantity * total_end
     quantity = 5 if quantity < 5 else quantity
     quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity
         
