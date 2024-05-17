@@ -316,7 +316,7 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
     }  
     params_str = credential.prase_param(params_map)
     json_data = json.loads(credential.send_request(method, path, params_str, payload))
-    print(json_data)
+    
     if 'data' in json_data:
       return json_data  
     else:
@@ -338,7 +338,7 @@ def get_rsi(symbol, timestamp):
     - float: If successful, returns the calculated RSI value.
     - str: If an error occurs, returns the error message.
     """
-    json_data = get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d')
+    json_data = get_candlestick_chart_data(symbol, timestamp)
     
     if 'data' in json_data:
       opening = []
@@ -445,7 +445,7 @@ def get_statistic_token(symbol, url):
     """
     statistic_token = requests.get(url)
     statistic_token =  statistic_token.json() 
-    
+    volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
     for i in statistic_token:
         i['id'] = i['symbol']   
     try:
@@ -457,7 +457,7 @@ def get_statistic_token(symbol, url):
         percent_7d = float(statistic_token[0]['percent_change_7d'])
         return volume, marketcap, percent_1h, percent_24h, percent_7d    
     except:
-        volume = marketcap = percent_1h = percent_24h = percent_7d = 1e-7
+        
         return volume, marketcap, percent_1h, percent_24h, percent_7d
         
 def check_balance_and_trade(balance, amount, symbol, network, address, tag, timestamp):  
@@ -669,4 +669,12 @@ context = {}
 lambda_handler(event, context)
 '''
 
-get_candlestick_chart_data('XRD', current_time)
+#Abstract into a later function
+candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1h')
+percent_1h_token = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+
+candlestick_list = get_candlestick_chart_data('XRD', current_time, 2, '1d')
+percent_24h_token = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
+
+candlestick_list = get_candlestick_chart_data('XRD', current_time, 7, '1d')
+percent_7d_token = (candlestick_list['data'][0][4]/candlestick_list['data'][-1][4])-1
