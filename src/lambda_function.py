@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from messaging_bot import bot_telegram
 from config import Config
 import transaction_handler
@@ -13,7 +12,6 @@ statistic_token = config.get_statistic_token()
 statistic_global = config.get_statistic_global()
 get_index_feargreed = config.get_index_feargreed()
 ADDRESS_BINGX_ETH = config.get_address_bingx()
-BUCKET_BOT_DCA_ITCHY = config.get_bucket_name()
 token_symbol = config.get_token_symbol()
 network_blockchain = config.get_blockchain_network()
 address_tag = config.get_tag_wallet()
