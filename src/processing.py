@@ -125,7 +125,7 @@ def indicators(symbol):
     array_index = [index_current, index_yesterday, index_last_week, index_last_month]
     trends = [((index_current - array_number) / array_number) * 100 for array_number in array_index]
     overview_trends = sum(trends)/len(trends)
-
+    info(f'Function indicators: token {symbol}')
     #index fear and greed
     match index_current:
         case index_current if index_current <= 25:
@@ -230,7 +230,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     quantity = quantity * total_end
     quantity = 5 if quantity < 5 else quantity
     quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity
-        
+    info(f'Function buy_dca: token {symbol}')    
     if total_end > 0.51:
         orderid, priceorder, qty, status = place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end)
         return orderid, priceorder, qty, status
