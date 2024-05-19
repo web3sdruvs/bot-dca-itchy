@@ -287,17 +287,17 @@ def get_price(symbol, timestamp):
     _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
 
     if 'data' in _json_data: 
-        low = round(_json_data['data'][0]['lowPrice'],4)
-        current = round(_json_data['data'][0]['lastPrice'],4)
-        changes = round(_json_data['data'][0]['openPrice'],4)
-        return low, current, changes
+        _low = round(_json_data['data'][0]['lowPrice'],4)
+        _current = round(_json_data['data'][0]['lastPrice'],4)
+        _changes = round(_json_data['data'][0]['openPrice'],4)
+        return _low, _current, _changes
     else:
         error(f'Function get_price: token {symbol}')
         _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+_error)
-        return error
+        return _error
 
 def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
     """
