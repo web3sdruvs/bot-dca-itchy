@@ -27,14 +27,14 @@ def get_balance(symbol, timestamp):
     - str: If an error occurs, return the error message.
     """
     info(f'Function get_balance: token {symbol}')
-    payload = {}
-    path = '/openApi/spot/v1/account/balance'
-    method = 'GET'
-    params_map = {
+    _payload = {}
+    _path = '/openApi/spot/v1/account/balance'
+    _method = 'GET'
+    _params_map = {
     'recvWindow': 0
     }
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
 
     if 'data' in json_data:  
         amount = 0.0  
@@ -67,10 +67,10 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     - str: If an error occurs, returns the error message.
     """
     info(f'Function request_withdraw: token {symbol}')
-    payload = {}
-    path = '/openApi/wallets/v1/capital/withdraw/apply'
-    method = 'POST'
-    params_map = {
+    _payload = {}
+    _path = '/openApi/wallets/v1/capital/withdraw/apply'
+    _method = 'POST'
+    _params_map = {
     'coin': symbol,
     'network': network,
     'address': address,
@@ -78,8 +78,8 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     'amount': amount,
     'walletType': 1
     }
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
 
     if 'data' in json_data:  
         result = json_data['data']['id']
@@ -111,14 +111,14 @@ def get_withdrawfee(symbol,network,timestamp):
     info(f'Function get_withdrawfee: token {symbol}')
     network_fee = float(0.0)
     network = network.upper()
-    payload = {}
-    path = '/openApi/wallets/v1/capital/config/getall'
-    method = "GET"
-    params_map = {
+    _payload = {}
+    _path = '/openApi/wallets/v1/capital/config/getall'
+    _method = "GET"
+    _params_map = {
     "recvWindow": 0
     }
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
     
     if 'data' in json_data:  
       json_data = json_data['data']
@@ -158,10 +158,10 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     - dict: If an error occurs, returns a dictionary with the 'statusCode' key set to 500.
     """
     info(f'Function place_order: token {symbol}')
-    payload = {}
-    path = '/openApi/spot/v1/trade/order'
-    method = 'POST'
-    params_map = {
+    _payload = {}
+    _path = '/openApi/spot/v1/trade/order'
+    _method = 'POST'
+    _params_map = {
     'symbol': symbol+'-USDT',
     'side': 'BUY', #BUY/SELL
     'type': 'MARKET', #MARKET/LIMIT
@@ -169,8 +169,8 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'quoteOrderQty': quantity,
     'recvWindow': 0
     }
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
     if 'data' in json_data:
         orderId = json_data['data']['orderId']
         priceOrder = round(float(json_data['data']['price']),3)
@@ -241,16 +241,16 @@ def cancel_order(symbol, orderId, timestamp):
     - str: If an error occurs, returns the error message.
     """
     info(f'Function cancel_order: token {symbol}')
-    payload = {}
-    path = '/openApi/spot/v1/trade/cancel'
-    method = 'POST'
-    params_map = {
+    _payload = {}
+    _path = '/openApi/spot/v1/trade/cancel'
+    _method = 'POST'
+    _params_map = {
     'symbol': symbol +'-USDT',
     'orderId': orderId,
     'recvWindow': 0
     }
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
     
     if 'data' in json_data:
         client_order_id = json_data['data']['client_order_id']
@@ -276,14 +276,14 @@ def get_price(symbol, timestamp):
     - str: If an error occurs, returns the error message.
     """
     info(f'Function get_price: token {symbol}')
-    payload = {}
-    path = '/openApi/spot/v1/ticker/24hr'
-    method = 'GET'
-    params_map = {
+    _payload = {}
+    _path = '/openApi/spot/v1/ticker/24hr'
+    _method = 'GET'
+    _params_map = {
     'symbol': symbol +'-USDT'
     }
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
 
     if 'data' in json_data: 
         low = round(json_data['data'][0]['lowPrice'],4)
@@ -322,18 +322,18 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
     desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
     start_epoch_timestamp = int(str(int(desired_time.timestamp()))+'000')
     end_epoch_timestamp = int(str(int(time.time()))+'000')
-    payload = {}
-    path = '/openApi/spot/v1/market/kline'
-    method = 'GET'
-    params_map = {
+    _payload = {}
+    _path = '/openApi/spot/v1/market/kline'
+    _method = 'GET'
+    _params_map = {
     'symbol': symbol +'-USDT',
     'interval': interval,
     'startTime': start_epoch_timestamp,
     'endTime': end_epoch_timestamp,
     'limit' : limit
     }  
-    params_str = credential.prase_param(params_map)
-    json_data = json.loads(credential.send_request(method, path, params_str, payload))
+    params_str = credential.prase_param(_params_map)
+    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
     
     if 'data' in json_data:
       return json_data  
