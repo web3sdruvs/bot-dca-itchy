@@ -109,8 +109,8 @@ def get_withdrawfee(symbol,network,timestamp):
     - str: If an error occurs, returns the error message.
     """
     info(f'Function get_withdrawfee: token {symbol}')
-    network_fee = float(0.0)
-    network = network.upper()
+    _network_fee = float(0.0)
+    _network = network.upper()
     _payload = {}
     _path = '/openApi/wallets/v1/capital/config/getall'
     _method = "GET"
@@ -122,19 +122,19 @@ def get_withdrawfee(symbol,network,timestamp):
     
     if 'data' in _json_data:  
       _json_data = _json_data['data']
-      for i in _json_data:
-        network_list = i.get("networkList", [])
-        for fee  in network_list:
-          if fee.get("name") == symbol and fee.get("network") == network:
-            network_fee = float(fee['withdrawFee'])
-            return network_fee
+      for _i in _json_data:
+        _network_list = _i.get("networkList", [])
+        for _fee  in _network_list:
+          if _fee.get("name") == symbol and _fee.get("network") == _network:
+            _network_fee = float(_fee['withdrawFee'])
+            return _network_fee
     else: 
         error(f'Function get_withdrawfee: token {symbol}')
         _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_withdrawfee\n\nError: '+_error)
-        return error
+        return _error
 
 def place_order(symbol, quantity, timestamp, index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, intensity):
     """
