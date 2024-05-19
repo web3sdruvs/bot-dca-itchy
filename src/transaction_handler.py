@@ -198,12 +198,12 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         _s3 = boto3.client('s3')
 
         try:
-            response = _s3.get_object(Bucket=_bucket_name, Key=_file_name)
-            csv_data = response['Body'].read().decode('utf-8')
+            _response = _s3.get_object(Bucket=_bucket_name, Key=_file_name)
+            _csv_data = _response['Body'].read().decode('utf-8')
 
         except _s3.exceptions.NoSuchKey:
-            csv_data = 'symbol,quantity,price,timestamp,index_current,index_class,dominance_btc_global,percent_1h_token,percent_24h_token,percent_7d_token,rsi_value,intensity\n'
-            _s3.put_object(Bucket=_bucket_name, Key=_file_name, Body=csv_data)
+            _csv_data = 'symbol,quantity,price,timestamp,index_current,index_class,dominance_btc_global,percent_1h_token,percent_24h_token,percent_7d_token,rsi_value,intensity\n'
+            _s3.put_object(Bucket=_bucket_name, Key=_file_name, Body=_csv_data)
 
         except Exception as e:
             
@@ -211,13 +211,13 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
                 'statusCode': 500,
             }
         
-        csv_data = csv_data+(symbol+','+str(_qty)+','+str(_priceOrder)+','+str(timestamp)+','
+        _csv_data = _csv_data+(symbol+','+str(_qty)+','+str(_priceOrder)+','+str(timestamp)+','
                     +str(index_current)+','+str(index_class)+','
                     +str(dominance_btc_global)+','+str(percent_1h_token)+','
                     +str(percent_24h_token)+','+str(percent_7d_token)+','
                     +str(rsi_value)+','+str(intensity)+'\n')     
                       
-        _s3.put_object(Bucket=_bucket_name, Key=_file_name, Body=csv_data)
+        _s3.put_object(Bucket=_bucket_name, Key=_file_name, Body=_csv_data)
         return _orderId, _priceOrder, _qty, _status 
      
     else:
