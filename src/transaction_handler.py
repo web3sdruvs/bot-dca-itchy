@@ -318,19 +318,19 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
         str: The error message if the API call fails.
     """
     info(f'Function get_candlestick_chart_data: token {symbol}')
-    current_datetime = datetime.now()
-    resultant_date = current_datetime - timedelta(days=14)
-    desired_time = datetime(resultant_date.year, resultant_date.month, resultant_date.day, 15, 59, 59)
-    start_epoch_timestamp = int(str(int(desired_time.timestamp()))+'000')
-    end_epoch_timestamp = int(str(int(time.time()))+'000')
+    _current_datetime = datetime.now()
+    _resultant_date = _current_datetime - timedelta(days=14)
+    _desired_time = datetime(_resultant_date.year, _resultant_date.month, _resultant_date.day, 15, 59, 59)
+    _start_epoch_timestamp = int(str(int(_desired_time.timestamp()))+'000')
+    _end_epoch_timestamp = int(str(int(time.time()))+'000')
     _payload = {}
     _path = '/openApi/spot/v1/market/kline'
     _method = 'GET'
     _params_map = {
     'symbol': symbol +'-USDT',
     'interval': interval,
-    'startTime': start_epoch_timestamp,
-    'endTime': end_epoch_timestamp,
+    'startTime': _start_epoch_timestamp,
+    'endTime': _end_epoch_timestamp,
     'limit' : limit
     }  
     _params_str = credential.prase_param(_params_map)
@@ -344,4 +344,4 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_candlestick\n\nError: '+_error)
-        return error
+        return _error
