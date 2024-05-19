@@ -33,24 +33,24 @@ def get_balance(symbol, timestamp):
     _params_map = {
     'recvWindow': 0
     }
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
 
-    if 'data' in json_data:  
-        amount = 0.0  
-        for balance in json_data['data']['balances']:
-            if balance['asset'] == symbol:
-                amount = round(float(balance['free']),8)
-        return amount
+    if 'data' in _json_data:  
+        _amount = 0.0  
+        for _balance in _json_data['data']['balances']:
+            if _balance['asset'] == symbol:
+                _amount = round(float(_balance['free']),8)
+        return _amount
     else:
         error(f'Function get_balance: token {symbol}') 
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_balance\n\nError: '+_error)
-        return error
+        return _error
 
-def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
+def request_withdraw(symbol, network, address, addressTag, _amount, timestamp):
     """
     Initiate a withdrawal request for a specific cryptocurrency.
 
@@ -59,7 +59,7 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     - network (str): The network for the withdrawal (e.g., 'BTC', 'ERC20').
     - address (str): The destination address for the withdrawal.
     - addressTag (str): Address tag or memo for certain cryptocurrencies.
-    - amount (float): The amount of cryptocurrency to withdraw.
+    - _amount (float): The _amount of cryptocurrency to withdraw.
     - timestamp (str): Timestamp used for error logging.
 
     Returns:
@@ -75,21 +75,21 @@ def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     'network': network,
     'address': address,
     'addressTag': addressTag,
-    'amount': amount,
+    '_amount': _amount,
     'walletType': 1
     }
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
 
-    if 'data' in json_data:  
-        result = json_data['data']['id']
-        bot_telegram('✅Withdrawal Successful\n\nYou have sucessfully withdrawn '+str(amount).replace('.', '\\.')
+    if 'data' in _json_data:  
+        result = _json_data['data']['id']
+        bot_telegram('✅Withdrawal Successful\n\nYou have sucessfully withdrawn '+str(_amount).replace('.', '\\.')
             +' '+symbol+' on '+timestamp.replace('-', '\\-')+' \\(GMT\\-5\\)\\.\n\nDestination address:\n\n`'
             +address+'`\n\nTransaction ID:\n`'+str(result)+'`')
         return result
     else:
         error(f'Function request_withdraw: token {symbol}')
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+_error)
@@ -117,12 +117,12 @@ def get_withdrawfee(symbol,network,timestamp):
     _params_map = {
     "recvWindow": 0
     }
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
     
-    if 'data' in json_data:  
-      json_data = json_data['data']
-      for i in json_data:
+    if 'data' in _json_data:  
+      _json_data = _json_data['data']
+      for i in _json_data:
         network_list = i.get("networkList", [])
         for fee  in network_list:
           if fee.get("name") == symbol and fee.get("network") == network:
@@ -130,7 +130,7 @@ def get_withdrawfee(symbol,network,timestamp):
             return network_fee
     else: 
         error(f'Function get_withdrawfee: token {symbol}')
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_withdrawfee\n\nError: '+_error)
@@ -169,18 +169,18 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     'quoteOrderQty': quantity,
     'recvWindow': 0
     }
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
-    if 'data' in json_data:
-        orderId = json_data['data']['orderId']
-        priceOrder = round(float(json_data['data']['price']),3)
-        qty = float(json_data['data']['executedQty'])
-        status = str(json_data['data']['status']).lower()
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
+    if 'data' in _json_data:
+        orderId = _json_data['data']['orderId']
+        priceOrder = round(float(_json_data['data']['price']),3)
+        qty = float(_json_data['data']['executedQty'])
+        status = str(_json_data['data']['status']).lower()
         total = round(qty*priceOrder,3)
         flag = '✅' if status != 'canceled' else '❌'
         bot_telegram(flag+'Buy order '+status+'\n\nOrder ID: `'
                      +str(orderId)+'`\nDate: '+timestamp.replace('-', '\\-')+' \\(GMT\\-5\\)\\\nToken: '
-                     +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\nAmount: '
+                     +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\n_amount: '
                      +str(qty).replace('.', '\\.')+'\nTotal: \\$'+str(total).replace('.', '\\.')+'\n\n📈Volatility in the Market\n\nIndex: '
                      +str(index_current).replace('.', '\\.')+' \\('+index_class+'\\)'
                      +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.').replace('-', '\\-')
@@ -221,7 +221,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
      
     else:
         error(f'Function place_order: token {symbol}')
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: place\\_order\n\nError: '+_error)
@@ -249,15 +249,15 @@ def cancel_order(symbol, orderId, timestamp):
     'orderId': orderId,
     'recvWindow': 0
     }
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
     
-    if 'data' in json_data:
-        client_order_id = json_data['data']['client_order_id']
+    if 'data' in _json_data:
+        client_order_id = _json_data['data']['client_order_id']
         return client_order_id
     else: 
         error(f'Function cancel_order: token {symbol}')
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: cancel\\_order\n\nError: '+_error)
@@ -282,17 +282,17 @@ def get_price(symbol, timestamp):
     _params_map = {
     'symbol': symbol +'-USDT'
     }
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
 
-    if 'data' in json_data: 
-        low = round(json_data['data'][0]['lowPrice'],4)
-        current = round(json_data['data'][0]['lastPrice'],4)
-        changes = round(json_data['data'][0]['openPrice'],4)
+    if 'data' in _json_data: 
+        low = round(_json_data['data'][0]['lowPrice'],4)
+        current = round(_json_data['data'][0]['lastPrice'],4)
+        changes = round(_json_data['data'][0]['openPrice'],4)
         return low, current, changes
     else:
         error(f'Function get_price: token {symbol}')
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: price\\_current\n\nError: '+_error)
@@ -332,14 +332,14 @@ def get_candlestick_chart_data(symbol, timestamp, limit=14, interval='1d'):
     'endTime': end_epoch_timestamp,
     'limit' : limit
     }  
-    params_str = credential.prase_param(_params_map)
-    json_data = json.loads(credential.send_request(_method, _path, params_str, _payload))
+    _params_str = credential.prase_param(_params_map)
+    _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
     
-    if 'data' in json_data:
-      return json_data  
+    if 'data' in _json_data:
+      return _json_data  
     else:
         error(f'Function get_candlestick_chart_data: token {symbol}')
-        _error = json_data['msg']
+        _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('✅Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_candlestick\n\nError: '+_error)
