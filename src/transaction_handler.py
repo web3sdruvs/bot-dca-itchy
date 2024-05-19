@@ -172,16 +172,16 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     _params_str = credential.prase_param(_params_map)
     _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
     if 'data' in _json_data:
-        orderId = _json_data['data']['orderId']
-        priceOrder = round(float(_json_data['data']['price']),3)
-        qty = float(_json_data['data']['executedQty'])
-        status = str(_json_data['data']['status']).lower()
-        total = round(qty*priceOrder,3)
-        flag = '✅' if status != 'canceled' else '❌'
-        bot_telegram(flag+'Buy order '+status+'\n\nOrder ID: `'
-                     +str(orderId)+'`\nDate: '+timestamp.replace('-', '\\-')+' \\(GMT\\-5\\)\\\nToken: '
-                     +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\namount: '
-                     +str(qty).replace('.', '\\.')+'\nTotal: \\$'+str(total).replace('.', '\\.')+'\n\n📈Volatility in the Market\n\nIndex: '
+        _orderId = _json_data['data']['orderId']
+        _priceOrder = round(float(_json_data['data']['price']),3)
+        _qty = float(_json_data['data']['executedQty'])
+        _status = str(_json_data['data']['status']).lower()
+        _total = round(_qty*_priceOrder,3)
+        _flag = '✅' if _status != 'canceled' else '❌'
+        bot_telegram(_flag+'Buy order '+_status+'\n\nOrder ID: `'
+                     +str(_orderId)+'`\nDate: '+timestamp.replace('-', '\\-')+' \\(GMT\\-5\\)\\\nToken: '
+                     +symbol+'\nPrice: \\$'+str(_priceOrder).replace('.', '\\.')+'\namount: '
+                     +str(_qty).replace('.', '\\.')+'\nTotal: \\$'+str(_total).replace('.', '\\.')+'\n\n📈Volatility in the Market\n\nIndex: '
                      +str(index_current).replace('.', '\\.')+' \\('+index_class+'\\)'
                      +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.').replace('-', '\\-')
                      +'\nRSI: '+str(round(rsi_value,2)).replace('.', '\\.')+'%'
@@ -191,19 +191,19 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
                      +str(round(percent_7d_token,2)).replace('.', '\\.').replace('-', '\\-')+'%')
 
         #register order in csv
-        bucket_name = BUCKET_BOT_DCA_ITCHY
-        token_lower = symbol.lower()
-        token_lower = token_lower if 'wbtc' != symbol else 'btc'
-        file_name = 'token/'+token_lower+'.csv'
-        s3 = boto3.client('s3')
+        _bucket_name = BUCKET_BOT_DCA_ITCHY
+        _token_lower = symbol.lower()
+        _token_lower = _token_lower if 'wbtc' != symbol else 'btc'
+        _file_name = 'token/'+_token_lower+'.csv'
+        _s3 = boto3.client('s3')
 
         try:
-            response = s3.get_object(Bucket=bucket_name, Key=file_name)
+            response = _s3.get_object(Bucket=_bucket_name, Key=_file_name)
             csv_data = response['Body'].read().decode('utf-8')
 
-        except s3.exceptions.NoSuchKey:
+        except _s3.exceptions.NoSuchKey:
             csv_data = 'symbol,quantity,price,timestamp,index_current,index_class,dominance_btc_global,percent_1h_token,percent_24h_token,percent_7d_token,rsi_value,intensity\n'
-            s3.put_object(Bucket=bucket_name, Key=file_name, Body=csv_data)
+            _s3.put_object(Bucket=_bucket_name, Key=_file_name, Body=csv_data)
 
         except Exception as e:
             
@@ -211,13 +211,14 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
                 'statusCode': 500,
             }
         
-        csv_data = csv_data+(symbol+','+str(qty)+','+str(priceOrder)+','+str(timestamp)+','
+        csv_data = csv_data+(symbol+','+str(_qty)+','+str(_priceOrder)+','+str(timestamp)+','
                     +str(index_current)+','+str(index_class)+','
                     +str(dominance_btc_global)+','+str(percent_1h_token)+','
                     +str(percent_24h_token)+','+str(percent_7d_token)+','
-                    +str(rsi_value)+','+str(intensity)+'\n')                   
-        s3.put_object(Bucket=bucket_name, Key=file_name, Body=csv_data)
-        return orderId, priceOrder, qty, status 
+                    +str(rsi_value)+','+str(intensity)+'\n')     
+                      
+        _s3.put_object(Bucket=_bucket_name, Key=_file_name, Body=csv_data)
+        return _orderId, _priceOrder, _qty, _status 
      
     else:
         error(f'Function place_order: token {symbol}')
@@ -225,7 +226,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: place\\_order\n\nError: '+_error)
-        return error
+        return _error
 
 def cancel_order(symbol, orderId, timestamp):
     """
