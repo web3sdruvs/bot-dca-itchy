@@ -50,7 +50,7 @@ def get_balance(symbol, timestamp):
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: get\\_balance\n\nError: '+_error)
         return _error
 
-def request_withdraw(symbol, network, address, addressTag, _amount, timestamp):
+def request_withdraw(symbol, network, address, addressTag, amount, timestamp):
     """
     Initiate a withdrawal request for a specific cryptocurrency.
 
@@ -59,7 +59,7 @@ def request_withdraw(symbol, network, address, addressTag, _amount, timestamp):
     - network (str): The network for the withdrawal (e.g., 'BTC', 'ERC20').
     - address (str): The destination address for the withdrawal.
     - addressTag (str): Address tag or memo for certain cryptocurrencies.
-    - _amount (float): The _amount of cryptocurrency to withdraw.
+    - amount (float): The amount of cryptocurrency to withdraw.
     - timestamp (str): Timestamp used for error logging.
 
     Returns:
@@ -75,25 +75,25 @@ def request_withdraw(symbol, network, address, addressTag, _amount, timestamp):
     'network': network,
     'address': address,
     'addressTag': addressTag,
-    '_amount': _amount,
+    'amount': amount,
     'walletType': 1
     }
     _params_str = credential.prase_param(_params_map)
     _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
 
     if 'data' in _json_data:  
-        result = _json_data['data']['id']
-        bot_telegram('✅Withdrawal Successful\n\nYou have sucessfully withdrawn '+str(_amount).replace('.', '\\.')
+        _result = _json_data['data']['id']
+        bot_telegram('✅Withdrawal Successful\n\nYou have sucessfully withdrawn '+str(amount).replace('.', '\\.')
             +' '+symbol+' on '+timestamp.replace('-', '\\-')+' \\(GMT\\-5\\)\\.\n\nDestination address:\n\n`'
-            +address+'`\n\nTransaction ID:\n`'+str(result)+'`')
-        return result
+            +address+'`\n\nTransaction ID:\n`'+str(_result)+'`')
+        return _result
     else:
         error(f'Function request_withdraw: token {symbol}')
         _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: request\\_withdraw\n\nError: '+_error)
-        return error
+        return _error
     
 def get_withdrawfee(symbol,network,timestamp):
     """
@@ -180,7 +180,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
         flag = '✅' if status != 'canceled' else '❌'
         bot_telegram(flag+'Buy order '+status+'\n\nOrder ID: `'
                      +str(orderId)+'`\nDate: '+timestamp.replace('-', '\\-')+' \\(GMT\\-5\\)\\\nToken: '
-                     +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\n_amount: '
+                     +symbol+'\nPrice: \\$'+str(priceOrder).replace('.', '\\.')+'\namount: '
                      +str(qty).replace('.', '\\.')+'\nTotal: \\$'+str(total).replace('.', '\\.')+'\n\n📈Volatility in the Market\n\nIndex: '
                      +str(index_current).replace('.', '\\.')+' \\('+index_class+'\\)'
                      +'\nIntensity: '+str(round(intensity,2)).replace('.', '\\.').replace('-', '\\-')
