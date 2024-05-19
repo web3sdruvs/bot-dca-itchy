@@ -254,15 +254,15 @@ def cancel_order(symbol, orderId, timestamp):
     _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
     
     if 'data' in _json_data:
-        client_order_id = _json_data['data']['client_order_id']
-        return client_order_id
+        _client_order_id = _json_data['data']['client_order_id']
+        return _client_order_id
     else: 
         error(f'Function cancel_order: token {symbol}')
         _error = _json_data['msg']
         _error = re.sub(re_default, ' ', str(_error))
         bot_telegram('❌Alert\\!\n\nAPI error on '+timestamp.replace('-', '\\-')
                      +' \\(GMT\\-5\\)\\.\n\nFunction failure: cancel\\_order\n\nError: '+_error)
-        return error
+        return _error
 
 def get_price(symbol, timestamp):
     """
