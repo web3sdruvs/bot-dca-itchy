@@ -82,28 +82,28 @@ def check_balance_and_trade(balance, amount, symbol, network, address, tag, time
     - None
     """
     info(f'Function check_balance_and_trade: token {symbol}')
-    usdt = get_balance('USDT', timestamp)
+    _usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
-    value = 5
-    if usdt < 5:
+    _value = 5
+    if _usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
-                    +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
+                    +str(round(_usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,value,usdt,timestamp)    
+        buy_dca(symbol,_value,_usdt,timestamp)    
     time.sleep(0.100)
-    fee = get_withdrawfee(symbol,network,timestamp)   
+    _fee = get_withdrawfee(symbol,network,timestamp)   
     
     try:
-        fee_percentage = fee / amount
+        _fee_percentage = _fee / amount
     except:      
-        fee_percentage = 1
+        _fee_percentage = 1
         
-    if fee_percentage < 0.05 and amount >= 10:
+    if _fee_percentage < 0.05 and amount >= 10:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
-                    +str(round(fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
-                    +str(round((fee / amount) * 100,2)).replace('.', '\\.')+'%')
+                    +str(round(_fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
+                    +str(round((_fee / amount) * 100,2)).replace('.', '\\.')+'%')
     else:
         time.sleep(0.100)
     
