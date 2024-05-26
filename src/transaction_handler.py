@@ -173,7 +173,7 @@ def place_order(symbol, quantity, timestamp, index_current, index_class, dominan
     _json_data = json.loads(credential.send_request(_method, _path, _params_str, _payload))
     if 'data' in _json_data:
         _orderId = _json_data['data']['orderId']
-        _priceOrder = round(float(_json_data['data']['price']),3)
+        _priceOrder = round(float(_json_data['data']['price']),5)
         _qty = float(_json_data['data']['executedQty'])
         _status = str(_json_data['data']['status']).lower()
         _total = round(_qty*_priceOrder,3)
