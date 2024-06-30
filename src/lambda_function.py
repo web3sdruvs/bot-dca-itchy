@@ -31,7 +31,7 @@ def lambda_handler(event, context):
         network_blockchain = network_blockchain_list[token_symbol[i].lower()]
         address_destination = address_destination_list[network_blockchain.lower()]
         address_tag = address_tag_list[token_symbol[i].lower()]
-        print(address_destination, network_blockchain, address_tag)
+        print(token_symbol[i], network_blockchain, address_destination, address_tag)
         """
         if qty_token is not None:
             check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain, address_destination, address_tag, current_time)

@@ -22,9 +22,9 @@ class Config:
     - get_statistic_global(): Retrieve the alternative API URL for global statistics.
     - get_index_feargreed(): Retrieve the alternative API URL for fear and greed index.
     - get_token_symbol(): Retrieve a list of token symbols from the configuration.
-    - get_token_address(): Retrieve a list of blockchain addresses from the configuration.
-    - get_blockchain_network(): Retrieve a list of blockchain networks from the configuration.
-    - get_tag_wallet(): Retrieve a list of wallet tags from the configuration.
+    - get_token_address_dict(): Retrieve a list of blockchain addresses from the configuration.
+    - get_blockchain_network_dict(): Retrieve a list of blockchain networks from the configuration.
+    - get_tag_wallet_dict(): Retrieve a list of wallet tags from the configuration.
     - get_current_time(): Retrieve the current time in the 'America/Cayman' timezone.
     - get_bucket_name(): Retrieve the AWS S3 bucket name for the bot's data.
 
