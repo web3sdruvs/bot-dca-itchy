@@ -28,12 +28,15 @@ def lambda_handler(event, context):
         info(f'Function lambda_handler: token {token_symbol[i]}')
         qty_token = get_balance(token_symbol[i], current_time)
         price_low, price_current, price_last = get_price(token_symbol[i], current_time)
+        print(config.get_list_blockchain_network())
+        """
         if qty_token is not None:
             check_balance_and_trade(round(qty_token * price_current,2), qty_token, token_symbol[i], network_blockchain[i], address_destination[i], address_tag[i], current_time)
         else: 
             error(f'Function lambda_handler: token {token_symbol}')
             bot_telegram('❌Alert\\!\n\nAPI error on '+current_time.replace('-', '\\-')
                 +' \\(GMT\\-5\\)\\.\n\nFunction failure: qty\\_token is null')
+        """
     info('Execution completed')
     return {
         'statusCode': 200,

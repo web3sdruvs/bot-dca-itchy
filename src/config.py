@@ -68,6 +68,9 @@ class Config:
     
     def get_blockchain_network(self):
         return list(self.config['BLOCKCHAIN_NETWORK'].values())
+    
+    def get_list_blockchain_network(self):
+        return dict(self.config['LIST_BLOCKCHAIN_ADDRESS'])
 
     def get_tag_wallet(self):
         return list(self.config['TAG'].values())
