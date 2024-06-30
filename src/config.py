@@ -68,12 +68,15 @@ class Config:
     
     def get_blockchain_network(self):
         return list(self.config['BLOCKCHAIN_NETWORK'].values())
-    
+
     def get_list_blockchain_network(self):
+        return dict(self.config['LIST_BLOCKCHAIN_NETWORK'])
+    
+    def get_list_token_address(self):
         return dict(self.config['LIST_BLOCKCHAIN_ADDRESS'])
 
-    def get_tag_wallet(self):
-        return list(self.config['TAG'].values())
+    def get_list_tag_wallet(self):
+        return dict(self.config['LIST_TAG'])
     
     def get_current_time(self):
         timezone_summer = pytz.timezone('America/Cayman')
