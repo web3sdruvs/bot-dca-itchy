@@ -8,9 +8,9 @@ basicConfig(level=INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 config_file = 'config.ini'
 config = Config(config_file)
 token_symbol = config.get_token_symbol()
-network_blockchain_list = config.get_list_blockchain_network()
-address_tag_list = config.get_list_tag_wallet()
-address_destination_list = config.get_list_token_address()
+network_blockchain_list = config.get_blockchain_network_dict()
+address_tag_list = config.get_tag_wallet_dict()
+address_destination_list = config.get_token_address_dict()
 current_time = config.get_current_time()
  
 def lambda_handler(event, context):

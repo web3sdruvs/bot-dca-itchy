@@ -69,13 +69,13 @@ class Config:
     def get_blockchain_network(self):
         return list(self.config['BLOCKCHAIN_NETWORK'].values())
 
-    def get_list_blockchain_network(self):
+    def get_blockchain_network_dict(self):
         return dict(self.config['LIST_BLOCKCHAIN_NETWORK'])
     
-    def get_list_token_address(self):
+    def get_token_address_dict(self):
         return dict(self.config['LIST_BLOCKCHAIN_ADDRESS'])
 
-    def get_list_tag_wallet(self):
+    def get_tag_wallet_dict(self):
         return dict(self.config['LIST_TAG'])
     
     def get_current_time(self):
