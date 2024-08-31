@@ -82,28 +82,28 @@ def check_balance_and_trade(balance, amount, symbol, network, address, tag, time
     - None
     """
     info(f'Function check_balance_and_trade: token {symbol}')
-    _usdt = get_balance('USDT', timestamp)
+    usdt = get_balance('USDT', timestamp)
     time.sleep(0.100)
-    _value = 5
-    if _usdt < 5:
+    value = 5
+    if usdt < 5:
       bot_telegram('❌Alert\\!\n\nDCA not completed\n\nYour USDT balance is $'
-                    +str(round(_usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
+                    +str(round(usdt,2)).replace('.', '\\.')+', please deposit to address: \n\n`'+ADDRESS_BINGX_ETH+'`')
     else:
-        buy_dca(symbol,_value,_usdt,timestamp)    
+        buy_dca(symbol,value,usdt,timestamp)    
     time.sleep(0.100)
-    _fee = get_withdrawfee(symbol,network,timestamp)   
+    fee = get_withdrawfee(symbol,network,timestamp)   
     
     try:
-        _fee_percentage = _fee / amount
+        fee_percentage = fee / amount
     except:      
-        _fee_percentage = 1
+        fee_percentage = 1
         
-    if _fee_percentage < 0.05 and amount >= 10:
+    if fee_percentage < 0.05 and amount >= 10:
         bot_telegram('⚠️Alert\\!\n\nMake the withdrawal\n\nYour '+symbol.replace('-', '\\-')+' balance is\nAmount: $'
                     +str(round(balance,2)).replace('.', '\\.')+'\nQty: '
                     +str(round(amount,4)).replace('.', '\\.')+'\nFee: '
-                    +str(round(_fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
-                    +str(round((_fee / amount) * 100,2)).replace('.', '\\.')+'%')
+                    +str(round(fee,4)).replace('.', '\\.')+'\nPercentage Fee: '
+                    +str(round((fee / amount) * 100,2)).replace('.', '\\.')+'%')
     else:
         time.sleep(0.100)
     
@@ -226,7 +226,7 @@ def buy_dca(symbol, quantity, usdt,timestamp):
     """
     info(f'Function buy_dca: token {symbol}')
     index_current, index_class, dominance_btc_global, percent_1h_token, percent_24h_token,percent_7d_token, rsi_value, total_end = indicators(symbol)
-    quantity = quantity if usdt < 60 else (usdt / 12) * ((5 ** (1 / 2) + 1) / 2)
+    quantity = quantity if usdt <= 40 else (usdt / 8) * ((5 ** (1 / 2) + 1) / 2)
     quantity = quantity * total_end
     quantity = 5 if quantity < 5 else quantity
     quantity = usdt if (quantity > usdt) or (usdt / 2) < 6 else quantity    
