@@ -1,0 +1,6 @@
+bs4
+requests
+telepot
+numpy
+boto3
+urllib3
