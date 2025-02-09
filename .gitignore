@@ -7,6 +7,9 @@ __pycache__/
 *.csv
 *.xlsx
 *.parquet
+*.png
+*.pbix
+*.pq
 
 # Virtual environments
 venv/
